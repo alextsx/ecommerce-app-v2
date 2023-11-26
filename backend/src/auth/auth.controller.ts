@@ -2,9 +2,9 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from '@n
 import { Response } from 'express';
 import { GetCurrentUser, Public } from 'src/common/decorators';
 import { RtGuard } from 'src/common/guards';
-import { AuthService } from './auth.service';
 import { REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAX_AGE } from './constants/jwt';
 import { AuthDto } from './dto';
+import { AuthService } from './services/auth.service';
 
 @Controller('auth')
 export class AuthController {

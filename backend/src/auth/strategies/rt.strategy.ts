@@ -4,8 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthService } from '../auth.service';
 import { REFRESH_TOKEN_COOKIE_NAME } from '../constants/jwt';
+import { AuthService } from '../services/auth.service';
 import { JwtPayload } from '../types';
 
 @Injectable()

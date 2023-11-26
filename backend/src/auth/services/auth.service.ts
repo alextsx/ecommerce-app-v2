@@ -2,18 +2,19 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshToken, User } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from './constants/jwt';
-import { AuthDto } from './dto';
-import { Tokens } from './types';
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from '../constants/jwt';
+import { AuthDto } from '../dto';
+import { Tokens } from '../types';
+import { PasswordService } from './password.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private passwordService: PasswordService
   ) {}
 
   async signInLocal(dto: AuthDto): Promise<Tokens> {
@@ -22,7 +23,7 @@ export class AuthService {
       throw new UnauthorizedException('Access denied');
     }
 
-    await this.checkCredentials({
+    await this.passwordService.checkCredentials({
       providedPassword: dto.password,
       hashedPassword: user.password
     });
@@ -38,7 +39,7 @@ export class AuthService {
   }
 
   async signupLocal(dto: AuthDto) {
-    const hash = await this.hashData(dto.password);
+    const hash = await this.passwordService.hashPassword(dto.password);
 
     return this.prisma.user.create({
       data: {
@@ -82,8 +83,6 @@ export class AuthService {
 
     return tokens;
   }
-
-  /*                                                                                                                                                                                                                                                              */
 
   private async updateOrInsertRefreshToken({
     user,
@@ -179,22 +178,5 @@ export class AuthService {
         refreshTokens: true
       }
     });
-  }
-
-  private checkCredentials({
-    providedPassword,
-    hashedPassword
-  }: {
-    providedPassword: string;
-    hashedPassword: string;
-  }) {
-    const passwordMatches = bcrypt.compare(providedPassword, hashedPassword);
-
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Access denied');
-    }
-  }
-  hashData(data: string) {
-    return bcrypt.hash(data, 10);
   }
 }
