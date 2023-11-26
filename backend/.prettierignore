@@ -1,0 +1,19 @@
+# Ignore artifacts:
+build
+coverage
+dist
+node_modules
+
+# Ignore generated files:
+src/generated/*
+
+# Ignore NestJS specific files:
+nest-cli.json
+tsconfig.build.json
+
+
+# Ignore frontend
+frontend/
+
+# Ignore prettier config
+.prettierrc.json

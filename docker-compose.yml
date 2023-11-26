@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: backend
+    working_dir: /app
+    build:
+      context: ./docker
+      dockerfile: backend.dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - database
+
+  frontend:
+    container_name: frontend
+    working_dir: /app
+    build:
+      context: ./docker
+      dockerfile: frontend.dockerfile
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+  database:
+    container_name: database
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: myappuser
+      POSTGRES_PASSWORD: myapppassword
+      POSTGRES_DB: myappdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
