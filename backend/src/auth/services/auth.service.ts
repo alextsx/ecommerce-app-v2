@@ -16,7 +16,7 @@ export class AuthService {
   async signInLocal(dto: AuthDto): Promise<Tokens> {
     const user = await this.findUserByEmailWithRefreshTokens(dto.email);
     if (!user) {
-      throw new UnauthorizedException('Access denied');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     await this.passwordService.checkCredentials({
