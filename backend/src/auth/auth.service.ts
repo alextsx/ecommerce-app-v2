@@ -64,7 +64,7 @@ export class AuthService {
         refreshToken
       },
       include: {
-        Owner: true
+        user: true
       }
     });
 
