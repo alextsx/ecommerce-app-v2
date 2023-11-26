@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { REFRESH_TOKEN_COOKIE_NAME } from '../constants/jwt';
-import { AuthService } from '../services/auth.service';
+import { TokenService } from '../services/token.service';
 import { JwtPayload } from '../types';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
     private configService: ConfigService,
     private prisma: PrismaService,
-    private authService: AuthService
+    private tokenService: TokenService
   ) {
     super({
       jwtFromRequest: (req) => req.cookies?.[REFRESH_TOKEN_COOKIE_NAME],
@@ -37,7 +37,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
 
     //refresh token reuse
     if (!foundRefreshToken) {
-      await this.authService.deleteEveryRefreshTokenByUserId(sub);
+      await this.tokenService.deleteEveryRefreshTokenByUserId(sub);
       throw new UnauthorizedException('Access denied');
     }
 

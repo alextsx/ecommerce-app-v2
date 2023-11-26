@@ -1,20 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { RefreshToken, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from '../constants/jwt';
 import { AuthDto } from '../dto';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwtService: JwtService,
-    private configService: ConfigService,
-    private passwordService: PasswordService
+    private passwordService: PasswordService,
+    private tokenService: TokenService
   ) {}
 
   async signInLocal(dto: AuthDto): Promise<Tokens> {
@@ -28,9 +24,9 @@ export class AuthService {
       hashedPassword: user.password
     });
 
-    const tokens = await this.signTokensForUser(user.id);
+    const tokens = await this.tokenService.signTokensForUser(user.id);
 
-    await this.updateOrInsertRefreshToken({
+    await this.tokenService.updateOrInsertRefreshToken({
       user,
       tokens
     });
@@ -73,100 +69,15 @@ export class AuthService {
       throw new UnauthorizedException('Access denied');
     }
 
-    const tokens = await this.signTokensForUser(userId);
+    const tokens = await this.tokenService.signTokensForUser(userId);
 
-    await this.replaceRefreshToken({
+    await this.tokenService.replaceRefreshToken({
       userId,
       oldRefreshToken: refreshToken,
       newRefreshToken: tokens.refresh_token
     });
 
     return tokens;
-  }
-
-  private async updateOrInsertRefreshToken({
-    user,
-    tokens
-  }: {
-    user: User & {
-      refreshTokens: RefreshToken[];
-    };
-    tokens: Tokens;
-  }) {
-    const { refresh_token } = tokens;
-    const sortedUserRefreshTokens = user.refreshTokens.sort(
-      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()
-    );
-
-    if (sortedUserRefreshTokens.length === 6) {
-      return this.prisma.refreshToken.update({
-        where: {
-          refreshToken: sortedUserRefreshTokens[0].refreshToken
-        },
-        data: {
-          refreshToken: refresh_token
-        }
-      });
-    }
-    return this.insertRefreshToken({
-      userId: user.id,
-      refreshToken: refresh_token
-    });
-  }
-  private replaceRefreshToken({ userId, oldRefreshToken, newRefreshToken }) {
-    return this.prisma.refreshToken.update({
-      where: {
-        userId,
-        refreshToken: oldRefreshToken
-      },
-      data: {
-        refreshToken: newRefreshToken
-      }
-    });
-  }
-
-  private insertRefreshToken({ userId, refreshToken }) {
-    return this.prisma.refreshToken.create({
-      data: {
-        refreshToken,
-        userId
-      }
-    });
-  }
-
-  public deleteEveryRefreshTokenByUserId(userId: string) {
-    return this.prisma.refreshToken.deleteMany({
-      where: {
-        userId
-      }
-    });
-  }
-
-  private async signTokensForUser(userId: string) {
-    const accessTokenPromise = this.jwtService.signAsync(
-      {
-        sub: userId
-      },
-      {
-        secret: this.configService.get('atSecret'),
-        expiresIn: ACCESS_TOKEN_MAX_AGE
-      }
-    );
-    const refreshTokenPromise = this.jwtService.signAsync(
-      {
-        sub: userId
-      },
-      {
-        secret: this.configService.get('rtSecret'),
-        expiresIn: REFRESH_TOKEN_MAX_AGE
-      }
-    );
-    const [at, rt] = await Promise.all([accessTokenPromise, refreshTokenPromise]);
-
-    return {
-      access_token: at,
-      refresh_token: rt
-    };
   }
 
   private findUserByEmailWithRefreshTokens(email: string) {
