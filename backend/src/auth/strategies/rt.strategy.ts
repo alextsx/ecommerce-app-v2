@@ -5,19 +5,20 @@ import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
 import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { REFRESH_TOKEN_COOKIE_NAME } from '../constants/jwt';
 import { TokenService } from '../services/token.service';
 import { JwtPayload } from '../types';
 
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+  private readonly rtCookieName: string;
   constructor(
     private configService: ConfigService<Config>,
     private prisma: PrismaService,
     private tokenService: TokenService
   ) {
+    const rtCookieName = configService.get('rtCookieName');
     super({
-      jwtFromRequest: (req) => req.cookies?.[REFRESH_TOKEN_COOKIE_NAME],
+      jwtFromRequest: (req) => req.cookies?.[rtCookieName],
       ignoreExpiration: false,
       passReqToCallback: true,
       secretOrKey: configService.get('rtSecret')
@@ -25,7 +26,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   }
 
   async validate(req: Request, payload: JwtPayload) {
-    const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE_NAME];
+    const refreshToken = req.cookies?.[this.rtCookieName];
 
     const { sub } = payload;
 

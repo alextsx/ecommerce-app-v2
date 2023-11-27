@@ -1,14 +1,23 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { GetCurrentUser, Public } from 'src/common/decorators';
 import { RtGuard } from 'src/common/guards';
-import { REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAX_AGE } from './constants/jwt';
+import { Config } from 'src/config';
 import { AuthDto } from './dto';
 import { AuthService } from './services/auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  private readonly rtCookieName: string;
+  private readonly rtMaxAge: number;
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService<Config>
+  ) {
+    this.rtCookieName = configService.get('rtCookieName');
+    this.rtMaxAge = configService.get('rtMaxAge');
+  }
 
   @Public()
   @Post('local/signup')
@@ -23,9 +32,9 @@ export class AuthController {
   async signInLocal(@Body() dto: AuthDto, @Res() response: Response) {
     const { access_token, refresh_token } = await this.authService.signInLocal(dto);
 
-    response.cookie(REFRESH_TOKEN_COOKIE_NAME, refresh_token, {
+    response.cookie(this.rtCookieName, refresh_token, {
       httpOnly: true,
-      maxAge: REFRESH_TOKEN_MAX_AGE,
+      maxAge: this.rtMaxAge,
       sameSite: 'strict',
       secure: true
     });
@@ -58,9 +67,9 @@ export class AuthController {
       refreshToken
     });
 
-    response.cookie(REFRESH_TOKEN_COOKIE_NAME, refresh_token, {
+    response.cookie(this.rtCookieName, refresh_token, {
       httpOnly: true,
-      maxAge: REFRESH_TOKEN_MAX_AGE,
+      maxAge: this.rtMaxAge,
       sameSite: 'strict',
       secure: true
     });
