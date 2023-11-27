@@ -1,4 +1,8 @@
-import './globals.css';
+import { Footer } from '@/components/footer/Footer';
+import { Header } from '@/components/header/Header';
+import { cn } from '@/lib/shadcn-utils';
+
+import '@/styles/globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -13,7 +17,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cn('min-h-screen bg-background antialiased flex flex-col', inter.className)}>
+        <Header />
+        <div className="flex-1">{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }
