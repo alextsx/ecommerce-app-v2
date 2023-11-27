@@ -23,6 +23,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
       passReqToCallback: true,
       secretOrKey: configService.get('rtSecret')
     });
+    this.rtCookieName = rtCookieName;
   }
 
   async validate(req: Request, payload: JwtPayload) {
