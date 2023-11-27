@@ -46,11 +46,21 @@ export class AuthController {
   @Public()
   @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
-  logout(
+  async logout(
     @GetCurrentUser('id') userId: string,
-    @GetCurrentUser('refreshToken') refreshToken: string
+    @GetCurrentUser('refreshToken') refreshToken: string,
+    @Res({ passthrough: true }) response: Response
   ) {
-    return this.authService.logout({ userId, refreshToken });
+    await this.authService.logout({ userId, refreshToken });
+
+    response.cookie(this.rtCookieName, '', {
+      httpOnly: true,
+      maxAge: 0,
+      sameSite: 'strict',
+      secure: true
+    });
+
+    response.send();
   }
 
   @Post('refresh')
