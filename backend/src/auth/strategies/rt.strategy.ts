@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
+import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { REFRESH_TOKEN_COOKIE_NAME } from '../constants/jwt';
 import { TokenService } from '../services/token.service';
@@ -11,7 +12,7 @@ import { JwtPayload } from '../types';
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
-    private configService: ConfigService,
+    private configService: ConfigService<Config>,
     private prisma: PrismaService,
     private tokenService: TokenService
   ) {

@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshToken, User } from '@prisma/client';
+import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from '../constants/jwt';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 
@@ -10,7 +10,7 @@ export class TokenService {
   public constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private configService: ConfigService<Config>,
     private passwordService: PasswordService
   ) {}
 
@@ -84,8 +84,7 @@ export class TokenService {
       },
       {
         secret: this.configService.get('atSecret'),
-        //todo refactor to be used from configservice
-        expiresIn: ACCESS_TOKEN_MAX_AGE
+        expiresIn: this.configService.get('atExpiresIn')
       }
     );
     const refreshTokenPromise = this.jwtService.signAsync(
@@ -94,7 +93,7 @@ export class TokenService {
       },
       {
         secret: this.configService.get('rtSecret'),
-        expiresIn: REFRESH_TOKEN_MAX_AGE
+        expiresIn: this.configService.get('rtExpiresIn')
       }
     );
     const [at, rt] = await Promise.all([accessTokenPromise, refreshTokenPromise]);
