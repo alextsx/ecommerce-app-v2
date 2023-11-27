@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshToken, User } from '@prisma/client';
@@ -6,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 
+@Injectable()
 export class TokenService {
   public constructor(
     private prisma: PrismaService,
