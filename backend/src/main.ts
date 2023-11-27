@@ -10,8 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.useGlobalFilters(new UnauthorizedErrorFilter());
   const configService = app.get<ConfigService<Config>>(ConfigService);
+  app.useGlobalFilters(new UnauthorizedErrorFilter(configService));
   const port = configService.get('port');
   await app.listen(port);
 }
