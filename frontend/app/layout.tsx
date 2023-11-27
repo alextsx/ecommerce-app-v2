@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={cn('min-h-screen bg-background antialiased flex flex-col', inter.className)}>
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 bg-secondary">{children}</main>
         <Footer />
       </body>
     </html>
