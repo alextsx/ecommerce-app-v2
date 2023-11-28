@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function Homepage() {
   return (
-    <main className="flex justify-center items-center flex-col w-full pt-10">
+    <>
       <div className="flex flex-col items-center md:px-20 lg:flex-row w-full">
         <HeroSection />
         <Slider />
@@ -51,6 +51,6 @@ export default function Homepage() {
         <ProductCard />
         <ProductCard />
       </section>
-    </main>
+    </>
   );
 }

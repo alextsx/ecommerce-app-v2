@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const HeroSection = () => {
   return (
-    <section className="flex flex-col items-start gap-2 px-4 pt-8 md:pt-12 pb-8">
+    <section className="flex flex-col items-start gap-2 px-4 pt-8 md:pt-12 lg:pl-14 pb-8">
       <Link
         className="inline-flex items-center border rounded-lg px-3 py-1 text-sm font-medium"
         href="/new-arrivals"
