@@ -1,0 +1,1 @@
+type Variant = 'destructive' | 'default';
