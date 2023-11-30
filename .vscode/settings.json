@@ -1,9 +1,5 @@
 {
   "editor.formatOnSave": true,
-  //auto deleting unused imports on save
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  },
   // Formatting using Prettier by default for all languages
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   // Formatting using Prettier for JavaScript, overrides VSCode default.
