@@ -1,4 +1,4 @@
-import { Logo } from './Logo';
+import { Logo } from '@/components/layout/Logo';
 import { NavLinks } from './nav-links/NavLinks';
 import { UserDropdown } from './user/UserDropdown';
 

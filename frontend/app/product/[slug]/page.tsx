@@ -1,6 +1,6 @@
 import { FaShoppingCart } from 'react-icons/fa';
 import Image from 'next/image';
-import { IconStar } from '@/components/IconStar';
+import { IconStar } from '@/components/icon/IconStar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 const IndividualProduct = () => {
   return (
-    <div className="max-w-6xl w-full space-y-8">
+    <div className="py-10 max-w-6xl space-y-8">
       <div className="bg-background px-20 py-10 border rounded-lg grid md:grid-cols-2 gap-4">
         <div className="flex flex-col items-start space-y-4">
           <Image

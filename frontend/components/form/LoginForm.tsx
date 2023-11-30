@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { cn } from '@/lib/shadcn-utils';
-import { SubmitBtn } from '../SubmitBtn';
+import { SubmitBtn } from '../button/SubmitBtn';
 
 type LoginFormProps = HTMLAttributes<HTMLFormElement>;
 type LoginFormValuesType = {

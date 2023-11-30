@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { FeatureCard } from '@/components/feature-card/FeatureCard';
-import { HeroSection } from '@/components/hero-section/HeroSection';
-import { ProductCard } from '@/components/product/ProductCard';
+import { FeatureCard } from '@/components/card/FeatureCard';
+import { ProductCard } from '@/components/card/ProductCard';
+import { HeroSection } from '@/components/HeroSection';
 import SectionSeparator from '@/components/SectionSeparator';
-import { Slider } from '@/components/slider/Slider';
+import { Slider } from '@/components/Slider';
 
 export const metadata: Metadata = {
   title: 'Dashboard',

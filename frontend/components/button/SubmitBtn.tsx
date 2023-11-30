@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef, memo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Spinner } from './Spinner';
+import { Spinner } from '../icon/Spinner';
 
 type SubmitBtnProps = {
   isLoading: boolean;
