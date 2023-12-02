@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient, UserRole } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { FulfillmentStatus, PaymentStatus, PrismaClient, UserRole } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -9,10 +9,39 @@ const getRandomUserRole = () => {
   const randomIndex = Math.floor(Math.random() * roles.length);
   return roles[randomIndex];
 };
+
+const getRandomFulfillmentStatus = () => {
+  const statuses = Object.values(FulfillmentStatus);
+  const randomIndex = Math.floor(Math.random() * statuses.length);
+  return statuses[randomIndex];
+};
+
+const getRandomPaymentStatus = () => {
+  const statuses = Object.values(PaymentStatus);
+  const randomIndex = Math.floor(Math.random() * statuses.length);
+  return statuses[randomIndex];
+};
+
 const getRandomId = async (model: any) => {
   const records = await model.findMany();
   const randomIndex = Math.floor(Math.random() * records.length);
   return records[randomIndex].id;
+};
+
+const uniqueIdSet = new Set();
+const getRandomUniqueId = async (model: any) => {
+  const records = await model.findMany();
+  const randomIndex = Math.floor(Math.random() * records.length);
+  const randomRecord = records[randomIndex];
+  if (uniqueIdSet.has(randomRecord.id)) {
+    return getRandomUniqueId(model);
+  }
+  uniqueIdSet.add(randomRecord.id);
+  return randomRecord.id;
+};
+
+const emptyUniqueSet = () => {
+  uniqueIdSet.clear();
 };
 
 const generateDataForAddress = () => ({
@@ -41,7 +70,9 @@ const seedProductsAndRelated = async () => {
         name: faker.commerce.productName(),
         price: parseFloat(faker.commerce.price()),
         inventory: faker.number.int({ min: 5, max: 100 }),
-        category: { connect: { id: randomCategoryId } }
+        category: { connect: { id: randomCategoryId } },
+        //only add description with 70%chance
+        description: faker.datatype.boolean() ? faker.commerce.productDescription() : null
       };
     })
   );
@@ -114,15 +145,23 @@ const seedCustomersAndRelated = async () =>
     })
   );
 const seedOrdersAndRelated = async () => {
-  const randomCustomerId = await getRandomId(prisma.customer);
-  const randomProductId = await getRandomId(prisma.product);
-  const orders = Array.from({ length: 40 }, () => ({
-    total: parseFloat(faker.commerce.price()),
-    customer: { connect: { id: randomCustomerId } }
-  }));
+  const orders = await Promise.all(
+    Array.from({ length: 40 }).map(async () => {
+      const randomUniqueCustomerId = await getRandomUniqueId(prisma.customer);
+      return {
+        total: parseFloat(faker.commerce.price()),
+        customer: { connect: { id: randomUniqueCustomerId } },
+        fulfillmentStatus: getRandomFulfillmentStatus(),
+        paymentStatus: getRandomPaymentStatus()
+      };
+    })
+  );
+
+  emptyUniqueSet();
 
   for (const order of orders) {
     const createdOrder = await prisma.order.create({ data: order });
+    const randomProductId = await getRandomId(prisma.product);
 
     await prisma.orderItem.create({
       data: {
