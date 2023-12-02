@@ -7,9 +7,9 @@ const prisma = new PrismaClient();
 //number of records to generate
 const ORDER_COUNT = 40;
 const CUSTOMER_COUNT = ORDER_COUNT;
-const PRODUCT_COUNT = faker.datatype.number({ min: 20, max: 50 });
-const USER_COUNT = faker.datatype.number({ min: 20, max: 50 });
-const CATEGORY_COUNT = faker.datatype.number({ min: 5, max: 10 });
+const PRODUCT_COUNT = faker.number.int({ min: 20, max: 50 });
+const USER_COUNT = faker.number.int({ min: 20, max: 50 });
+const CATEGORY_COUNT = faker.number.int({ min: 5, max: 10 });
 
 const getRandomEnumValue = <T>(prismaEnum: T) => {
   const statuses = Object.values(prismaEnum);
@@ -44,7 +44,8 @@ const seedCategories = async () => {
       console.error('could not generate unique category name');
       return;
     }
-    await prisma.category.create({ data: { name: categoryName } });
+    const slug = faker.helpers.slugify(categoryName);
+    await prisma.category.create({ data: { name: categoryName, slug } });
   }
 };
 
@@ -52,11 +53,14 @@ const seedProductsAndRelated = async () => {
   const products = await Promise.all(
     Array.from({ length: PRODUCT_COUNT }).map(async () => {
       const randomCategoryId = await getRandomId(prisma.category);
+      const productName = faker.commerce.productName();
+      const slug = faker.helpers.slugify(productName) + '-' + faker.string.uuid().slice(0, 4);
       return {
-        name: faker.commerce.productName(),
+        name: productName,
         price: faker.number.float({ min: 0.5, max: 100 }),
         inventory: faker.number.int({ min: 5, max: 100 }),
         category: { connect: { id: randomCategoryId } },
+        slug,
         //only add description with 70%chance
         description: faker.datatype.boolean() ? faker.commerce.productDescription() : null
       };
