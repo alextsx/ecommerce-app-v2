@@ -88,7 +88,7 @@ const seedUsersAndRelated = async () => {
   }
 };
 
-const seedCustomersAndRelated = async () => {
+const seedCustomersAndRelated = async () =>
   Promise.all(
     Array.from({ length: 20 }).map(async () => {
       const shippingAddress = await prisma.address.create({
@@ -113,7 +113,6 @@ const seedCustomersAndRelated = async () => {
       });
     })
   );
-};
 const seedOrdersAndRelated = async () => {
   const randomCustomerId = await getRandomId(prisma.customer);
   const randomProductId = await getRandomId(prisma.product);
