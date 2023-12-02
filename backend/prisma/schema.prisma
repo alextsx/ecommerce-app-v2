@@ -115,6 +115,8 @@ model Product {
   description String?
   inventory   Int     @default(0)
 
+  isFeatured Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
