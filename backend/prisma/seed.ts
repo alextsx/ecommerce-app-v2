@@ -4,6 +4,13 @@ import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+//number of records to generate
+const ORDER_COUNT = 40;
+const CUSTOMER_COUNT = ORDER_COUNT;
+const PRODUCT_COUNT = faker.datatype.number({ min: 20, max: 50 });
+const USER_COUNT = faker.datatype.number({ min: 20, max: 50 });
+const CATEGORY_COUNT = faker.datatype.number({ min: 5, max: 10 });
+
 const getRandomEnumValue = <T>(prismaEnum: T) => {
   const statuses = Object.values(prismaEnum);
   const randomIndex = Math.floor(Math.random() * statuses.length);
@@ -15,7 +22,7 @@ const getRandomId = async (model: any) => {
   return records[randomIndex].id;
 };
 
-//todo sohuld
+//todo factory pattern
 const generateDataForAddress = () => ({
   line1: faker.location.streetAddress(),
   city: faker.location.city(),
@@ -25,7 +32,7 @@ const generateDataForAddress = () => ({
 });
 
 const seedCategories = async () => {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < CATEGORY_COUNT; i++) {
     const existingCategories = await prisma.category.findMany();
     let categoryName: string;
     let maxTries = 20;
@@ -43,7 +50,7 @@ const seedCategories = async () => {
 
 const seedProductsAndRelated = async () => {
   const products = await Promise.all(
-    Array.from({ length: 50 }).map(async () => {
+    Array.from({ length: PRODUCT_COUNT }).map(async () => {
       const randomCategoryId = await getRandomId(prisma.category);
       return {
         name: faker.commerce.productName(),
@@ -76,7 +83,7 @@ const seedProductsAndRelated = async () => {
 };
 
 const seedUsersAndRelated = async () => {
-  const users = Array.from({ length: 20 }, () => ({
+  const users = Array.from({ length: USER_COUNT }, () => ({
     email: faker.internet.email(),
     password: bcrypt.hashSync(faker.internet.password(), 10),
     role: getRandomEnumValue(UserRole)
@@ -98,11 +105,9 @@ const seedUsersAndRelated = async () => {
   }
 };
 
-const ORDER_COUNT = 40;
-
 const _seedCustomersAndRelated = async () =>
   Promise.all(
-    Array.from({ length: ORDER_COUNT }).map(async () => {
+    Array.from({ length: CUSTOMER_COUNT }).map(async () => {
       const shippingAddress = await prisma.address.create({
         data: {
           ...generateDataForAddress()
@@ -129,17 +134,16 @@ const _seedCustomersAndRelated = async () =>
     })
   );
 
-//! customerId is unique so we cant use map and Promise.all, we must
-//! execute them in sequence
-
 /*
+! customerId is unique so we cant use map and Promise.all, we must
+! execute them in sequence
+
 this also seeds orderitems & customers
 */
 const seedOrdersAndRelated = async () => {
   const newCustomerRecords = await _seedCustomersAndRelated();
   const newCustomerIds = newCustomerRecords.map((record) => record.id);
-  const orderCount = ORDER_COUNT;
-  for (let i = 0; i < orderCount; i++) {
+  for (let i = 0; i < ORDER_COUNT; i++) {
     const orderData = {
       total: faker.number.float({ min: 10, max: 1000 }),
       customerId: newCustomerIds[i],
