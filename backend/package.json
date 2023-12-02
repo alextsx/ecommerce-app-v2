@@ -36,6 +36,9 @@
       "^.+\\.(t|j)s$": "ts-jest"
     }
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@nestjs/common": "^10.2.10",
     "@nestjs/config": "^3.1.1",
@@ -55,6 +58,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^10.0.3",
