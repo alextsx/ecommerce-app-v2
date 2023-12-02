@@ -192,9 +192,9 @@ model Order {
 
   //subtotal Decimal
   //tax      Decimal
-  total     Decimal
-  fulfilled FulfillmentStatus @default(PENDING)
-  paid      PaymentStatus     @default(PENDING)
+  total             Decimal
+  fulfillmentStatus FulfillmentStatus @default(PENDING)
+  paymentStatus     PaymentStatus     @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
