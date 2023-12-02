@@ -22,7 +22,7 @@ export function ProductCard() {
           layout="fill"
         />
       </div>
-      <div className="absolute bottom-0 w-full xl:h-2/5 h-3/5 bg-white p-4 flex flex-col justify-between">
+      <div className="absolute bottom-0 w-full xl:h-2/5 h-3/5 bg-primary-foreground p-4 flex flex-col justify-between">
         <div>
           <h2 className="text-lg font-bold overflow-ellipsis overflow-hidden whitespace-nowrap hover:whitespace-normal cursor-default">
             {product.name}
