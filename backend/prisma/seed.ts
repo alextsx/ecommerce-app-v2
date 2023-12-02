@@ -4,30 +4,18 @@ import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-const getRandomUserRole = () => {
-  const roles = Object.values(UserRole);
-  const randomIndex = Math.floor(Math.random() * roles.length);
-  return roles[randomIndex];
-};
-
-const getRandomFulfillmentStatus = () => {
-  const statuses = Object.values(FulfillmentStatus);
+const getRandomEnumValue = <T>(prismaEnum: T) => {
+  const statuses = Object.values(prismaEnum);
   const randomIndex = Math.floor(Math.random() * statuses.length);
   return statuses[randomIndex];
 };
-
-const getRandomPaymentStatus = () => {
-  const statuses = Object.values(PaymentStatus);
-  const randomIndex = Math.floor(Math.random() * statuses.length);
-  return statuses[randomIndex];
-};
-
 const getRandomId = async (model: any) => {
   const records = await model.findMany();
   const randomIndex = Math.floor(Math.random() * records.length);
   return records[randomIndex].id;
 };
 
+//TODO make a diff class
 const uniqueIdSet = new Set();
 const getRandomUniqueId = async (model: any) => {
   const records = await model.findMany();
@@ -39,11 +27,10 @@ const getRandomUniqueId = async (model: any) => {
   uniqueIdSet.add(randomRecord.id);
   return randomRecord.id;
 };
-
 const emptyUniqueSet = () => {
   uniqueIdSet.clear();
 };
-
+//todo sohuld
 const generateDataForAddress = () => ({
   line1: faker.location.streetAddress(),
   city: faker.location.city(),
@@ -100,7 +87,7 @@ const seedUsersAndRelated = async () => {
   const users = Array.from({ length: 20 }, () => ({
     email: faker.internet.email(),
     password: bcrypt.hashSync(faker.internet.password(), 10),
-    role: getRandomUserRole()
+    role: getRandomEnumValue(UserRole)
   }));
 
   for (const user of users) {
@@ -151,8 +138,8 @@ const seedOrdersAndRelated = async () => {
       return {
         total: parseFloat(faker.commerce.price()),
         customer: { connect: { id: randomUniqueCustomerId } },
-        fulfillmentStatus: getRandomFulfillmentStatus(),
-        paymentStatus: getRandomPaymentStatus()
+        fulfillmentStatus: getRandomEnumValue(FulfillmentStatus),
+        paymentStatus: getRandomEnumValue(PaymentStatus)
       };
     })
   );
