@@ -15,21 +15,6 @@ const getRandomId = async (model: any) => {
   return records[randomIndex].id;
 };
 
-//TODO make a diff class
-const uniqueIdSet = new Set();
-const getRandomUniqueId = async (model: any) => {
-  const records = await model.findMany();
-  const randomIndex = Math.floor(Math.random() * records.length);
-  const randomRecord = records[randomIndex];
-  if (uniqueIdSet.has(randomRecord.id)) {
-    return getRandomUniqueId(model);
-  }
-  uniqueIdSet.add(randomRecord.id);
-  return randomRecord.id;
-};
-const emptyUniqueSet = () => {
-  uniqueIdSet.clear();
-};
 //todo sohuld
 const generateDataForAddress = () => ({
   line1: faker.location.streetAddress(),
@@ -40,12 +25,19 @@ const generateDataForAddress = () => ({
 });
 
 const seedCategories = async () => {
-  const categories = Array.from({ length: 10 }, () => ({
-    name: faker.commerce.department()
-  }));
-
-  for (const category of categories) {
-    await prisma.category.create({ data: category });
+  for (let i = 0; i < 10; i++) {
+    const existingCategories = await prisma.category.findMany();
+    let categoryName: string;
+    let maxTries = 20;
+    do {
+      maxTries--;
+      categoryName = faker.commerce.department();
+    } while (existingCategories.some((category) => category.name === categoryName) && maxTries > 0);
+    if (maxTries === 0) {
+      console.error('could not generate unique category name');
+      return;
+    }
+    await prisma.category.create({ data: { name: categoryName } });
   }
 };
 
@@ -55,7 +47,7 @@ const seedProductsAndRelated = async () => {
       const randomCategoryId = await getRandomId(prisma.category);
       return {
         name: faker.commerce.productName(),
-        price: parseFloat(faker.commerce.price()),
+        price: faker.number.float({ min: 0.5, max: 100 }),
         inventory: faker.number.int({ min: 5, max: 100 }),
         category: { connect: { id: randomCategoryId } },
         //only add description with 70%chance
@@ -106,9 +98,11 @@ const seedUsersAndRelated = async () => {
   }
 };
 
-const seedCustomersAndRelated = async () =>
+const ORDER_COUNT = 40;
+
+const _seedCustomersAndRelated = async () =>
   Promise.all(
-    Array.from({ length: 20 }).map(async () => {
+    Array.from({ length: ORDER_COUNT }).map(async () => {
       const shippingAddress = await prisma.address.create({
         data: {
           ...generateDataForAddress()
@@ -122,32 +116,38 @@ const seedCustomersAndRelated = async () =>
       });
       const randomUserId = await getRandomId(prisma.user);
 
-      return await prisma.customer.create({
-        data: {
-          shippingAddress: { connect: { id: shippingAddress.id } },
-          billingAddress: { connect: { id: billingAddress.id } },
-          user: { connect: { id: randomUserId } }
-        }
-      });
-    })
-  );
-const seedOrdersAndRelated = async () => {
-  const orders = await Promise.all(
-    Array.from({ length: 40 }).map(async () => {
-      const randomUniqueCustomerId = await getRandomUniqueId(prisma.customer);
-      return {
-        total: parseFloat(faker.commerce.price()),
-        customer: { connect: { id: randomUniqueCustomerId } },
-        fulfillmentStatus: getRandomEnumValue(FulfillmentStatus),
-        paymentStatus: getRandomEnumValue(PaymentStatus)
+      const data = {
+        shippingAddress: { connect: { id: shippingAddress.id } },
+        billingAddress: { connect: { id: billingAddress.id } }
       };
+
+      if (faker.datatype.boolean()) {
+        data['user'] = { connect: { id: randomUserId } };
+      }
+
+      return await prisma.customer.create({ data });
     })
   );
 
-  emptyUniqueSet();
+//! customerId is unique so we cant use map and Promise.all, we must
+//! execute them in sequence
 
-  for (const order of orders) {
-    const createdOrder = await prisma.order.create({ data: order });
+/*
+this also seeds orderitems & customers
+*/
+const seedOrdersAndRelated = async () => {
+  const newCustomerRecords = await _seedCustomersAndRelated();
+  const newCustomerIds = newCustomerRecords.map((record) => record.id);
+  const orderCount = ORDER_COUNT;
+  for (let i = 0; i < orderCount; i++) {
+    const orderData = {
+      total: faker.number.float({ min: 10, max: 1000 }),
+      customerId: newCustomerIds[i],
+      fulfillmentStatus: getRandomEnumValue(FulfillmentStatus),
+      paymentStatus: getRandomEnumValue(PaymentStatus)
+    };
+
+    const createdOrder = await prisma.order.create({ data: orderData });
     const randomProductId = await getRandomId(prisma.product);
 
     await prisma.orderItem.create({
@@ -164,12 +164,12 @@ const main = async () => {
   await seedCategories();
   await seedUsersAndRelated();
   await seedProductsAndRelated();
-  await seedCustomersAndRelated();
   await seedOrdersAndRelated();
 };
 
 main()
   .catch((e) => {
+    console.log(e);
     throw e;
   })
   .finally(async () => {
