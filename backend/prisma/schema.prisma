@@ -45,6 +45,7 @@ model User {
   refreshTokens RefreshToken[]
   reviews       Review[]
   customers     Customer[]
+  UserDetails   UserDetails?
 
   @@index([email])
   @@map("users")
@@ -64,6 +65,9 @@ model UserDetails {
   billingAddress    Address @relation(fields: [billingAddressId], references: [id], name: "billingAddress")
   shippingAddressId String  @unique
   billingAddressId  String  @unique
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 
   @@map("user_details")
 }
@@ -108,7 +112,6 @@ model Product {
   name        String
   description String?
   price       Float
-  quantity    Int
   inventory   Int     @default(0)
 
   createdAt DateTime @default(now())
