@@ -10,28 +10,212 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//! ENUMS
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum FulfillmentStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+//! MODELS
 model User {
   id String @id @default(uuid())
 
   email    String @unique
   password String
 
+  role UserRole @default(CUSTOMER)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   refreshTokens RefreshToken[]
+  reviews       Review[]
+  customers     Customer[]
 
   @@index([email])
   @@map("users")
 }
 
+model UserDetails {
+  id String @id @default(uuid())
+
+  firstName String
+  lastName  String
+  phone     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  shippingAddress   Address @relation(fields: [shippingAddressId], references: [id], name: "shippingAddress")
+  billingAddress    Address @relation(fields: [billingAddressId], references: [id], name: "billingAddress")
+  shippingAddressId String  @unique
+  billingAddressId  String  @unique
+
+  @@map("user_details")
+}
+
+model Address {
+  id String @id @default(uuid())
+
+  line1   String
+  line2   String?
+  city    String
+  state   String
+  country String
+  zipcode String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userShippingAddress     UserDetails[] @relation(name: "shippingAddress")
+  userBillingAddress      UserDetails[] @relation(name: "billingAddress")
+  customerShippingAddress Customer[]    @relation(name: "shippingAddress")
+  customerBillingAddress  Customer[]    @relation(name: "billingAddress")
+
+  @@map("addresses")
+}
+
 model RefreshToken {
-  refreshToken String   @id @default(uuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  refreshToken String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   @@index([userId, refreshToken])
   @@map("refresh_tokens")
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  price       Float
+  quantity    Int
+  inventory   Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews       Review[]
+  productImages ProductImage[]
+  category      Category?      @relation(fields: [categoryId], references: [id])
+  categoryId    String?
+  orderItems    OrderItem[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id String @id @default(uuid())
+
+  url String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@map("product_images")
+}
+
+model Category {
+  id String @id @default(uuid())
+
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Review {
+  id String @id @default(uuid())
+
+  rating Int
+  body   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@map("reviews")
+}
+
+model Customer {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user              User?   @relation(fields: [userId], references: [id])
+  userId            String?
+  shippingAddress   Address @relation(fields: [shippingAddressId], references: [id], name: "shippingAddress")
+  billingAddress    Address @relation(fields: [billingAddressId], references: [id], name: "billingAddress")
+  shippingAddressId String  @unique
+  billingAddressId  String  @unique
+  Order             Order?
+
+  @@map("customers")
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  //subtotal Decimal
+  //tax      Decimal
+  total     Decimal
+  fulfilled FulfillmentStatus @default(PENDING)
+  paid      PaymentStatus     @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems OrderItem[]
+
+  customerId String   @unique
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+
+  quantity Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@map("order_items")
 }
