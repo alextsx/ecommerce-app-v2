@@ -1,7 +1,7 @@
 import { Category, ProductImage } from '@prisma/client';
 import { Exclude, Transform } from 'class-transformer';
 
-export class ProductDto {
+export class ProductDto implements Readonly<ProductDto> {
   @Exclude()
   id: string;
 
@@ -10,7 +10,7 @@ export class ProductDto {
   price: number;
   inventory: number;
   slug: string;
-  featured: boolean;
+  isFeatured: boolean;
 
   @Transform(({ value }: { value: ProductImage[] }) => value.map((image) => image.url))
   productImages: string[];
