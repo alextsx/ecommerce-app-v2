@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { GetCurrentUser, Public } from 'src/common/decorators';
 import { RtGuard } from 'src/common/guards';
 import { Config } from 'src/config';
-import { AuthDto } from './dto';
+import { AuthDto } from './dtos';
 import { AuthService } from './services/auth.service';
 
 @Controller('auth')

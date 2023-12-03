@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from '../dto';
+import { AuthDto } from '../dtos';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
