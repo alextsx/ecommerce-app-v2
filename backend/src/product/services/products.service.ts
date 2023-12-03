@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Product } from '@prisma/client';
+import { PaginationResultDto } from 'src/common/dtos/pagination-result.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { FilterDto } from '../dtos/filter.dto';
+import { ProductSortableOrders, SortDto } from '../dtos/sort.dto';
 
 @Injectable()
 export class ProductsService {
@@ -110,5 +114,74 @@ export class ProductsService {
         }
       }
     });
+  }
+
+  public async getProducts({
+    paginationDto,
+    filterDto,
+    sortDto
+  }: {
+    paginationDto: PaginationDto;
+    filterDto: FilterDto;
+    sortDto: SortDto;
+  }): Promise<PaginationResultDto<Product>> {
+    const where = {};
+    const include = {
+      productImages: {
+        select: {
+          url: true
+        }
+      }
+    };
+
+    if (filterDto.category) {
+      where['category'] = { name: filterDto.category };
+      include['category'] = {
+        select: {
+          name: true
+        }
+      };
+    }
+
+    const filters = Object.keys(filterDto).filter((key) => key !== 'category');
+    filters.forEach((filter) => {
+      where[filter] = {
+        contains: filterDto[filter],
+        mode: 'insensitive'
+      };
+    });
+
+    const orderBy = {};
+    if (sortDto.sort) {
+      const [column, order] = sortDto.sort.split('-');
+      orderBy[column as ProductSortableOrders] = order;
+    }
+
+    const { page = 1, limit = 10 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const total = await this.prismaService.product.count({ where });
+    const last_page = Math.ceil(total / limit);
+
+    const products = await this.prismaService.product.findMany({
+      where,
+      include,
+      orderBy,
+      skip,
+      take: limit
+    });
+
+    const meta = {
+      items_per_page: limit,
+      currentPage: page,
+      total,
+      last_page,
+      first_page: 1
+    };
+
+    return {
+      data: products,
+      meta
+    };
   }
 }
