@@ -25,7 +25,7 @@ export class ProductDto {
   updatedAt: Date;
 }
 
-export class RelatedProductDto {
+export class ProductCardDto {
   @Exclude()
   id: string;
 

@@ -2,7 +2,7 @@ import { Controller, Get, NotFoundException, Param, UseInterceptors } from '@nes
 import { Product } from '@prisma/client';
 import { Public } from 'src/common/decorators';
 import { TransformDataInterceptor } from 'src/common/interceptors/transformData.interceptor';
-import { ProductDto, RelatedProductDto } from '../dtos/product.dto';
+import { ProductCardDto, ProductDto } from '../dtos/product.dto';
 import { ProductService } from '../services/product.service';
 
 @Controller('product')
@@ -24,7 +24,7 @@ export class ProductController {
 
   @Public()
   @Get(':slug/related')
-  @UseInterceptors(new TransformDataInterceptor(RelatedProductDto))
+  @UseInterceptors(new TransformDataInterceptor(ProductCardDto))
   async getRelatedProducts(@Param('slug') slug: string): Promise<Product[]> {
     // we dont throw error if no related products found, we just dont display any on the frontend
     return this.productService.getRelatedProducts(slug);
