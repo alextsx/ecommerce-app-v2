@@ -116,6 +116,7 @@ export class ProductsService {
     });
   }
 
+  //TODO refactor this into separate helper functions
   public async getProducts({
     paginationDto,
     filterDto,
