@@ -60,6 +60,7 @@ const seedProductsAndRelated = async () => {
         price: faker.number.float({ min: 0.5, max: 100 }),
         inventory: faker.number.int({ min: 5, max: 100 }),
         category: { connect: { id: randomCategoryId } },
+        isFeatured: faker.datatype.boolean(),
         slug,
         //only add description with 70%chance
         description: faker.datatype.boolean() ? faker.commerce.productDescription() : null
