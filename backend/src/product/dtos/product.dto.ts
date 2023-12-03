@@ -39,6 +39,8 @@ export class ProductCardDto {
 
   @Transform(({ value }: { value: ProductImage[] }) => value.map((image) => image.url))
   productImages: string[];
+  @Exclude()
+  category: string;
 
   @Exclude()
   createdAt: Date;

@@ -5,6 +5,7 @@ import { ProductCardDto } from '../dtos/product.dto';
 import { ProductsService } from '../services/products.service';
 
 @Controller('products')
+@UseInterceptors(new TransformDataInterceptor(ProductCardDto))
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
@@ -16,7 +17,6 @@ export class ProductsController {
 
   @Public()
   @Get('featured')
-  @UseInterceptors(new TransformDataInterceptor(ProductCardDto))
   async getFeaturedProducts() {
     return this.productsService.getFeaturedProducts();
   }
@@ -24,12 +24,12 @@ export class ProductsController {
   @Public()
   @Get('new-arrivals')
   async getNewArrivalsProducts() {
-    return 'getNewArrivalsProducts';
+    return this.productsService.getNewArrivalsProducts();
   }
 
   @Public()
   @Get('best-sellers')
   async getBestSellersProducts() {
-    return 'getBestSellersProducts';
+    return this.productsService.getBestSellerProducts();
   }
 }
