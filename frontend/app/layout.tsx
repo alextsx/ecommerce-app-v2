@@ -1,6 +1,7 @@
 import { Footer } from '@/components/layout/footer/Footer';
 import { Header } from '@/components/layout/header/Header';
 import { cn } from '@/lib/shadcn-utils';
+import { ReduxProvider } from '@/providers/ReduxProvider';
 
 import '@/styles/globals.css';
 
@@ -20,10 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={cn('min-h-screen  bg-background antialiased flex flex-col', inter.className)}
       >
-        <Header />
-        <main className="flex flex-1 bg-secondary justify-center items-center flex-col w-full py-10">
-          {children}
-        </main>
+        <ReduxProvider>
+          <Header />
+          <main className="flex flex-1 bg-secondary justify-center items-center flex-col w-full py-10">
+            {children}
+          </main>
+        </ReduxProvider>
         <Footer />
       </body>
     </html>
