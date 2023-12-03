@@ -9,7 +9,10 @@ export class ProductsService {
   public async getFeaturedProducts(): Promise<Product[]> {
     const featuredProducts = await this.prismaService.product.findMany({
       where: {
-        isFeatured: true
+        isFeatured: true,
+        inventory: {
+          gt: 0
+        }
       },
       take: 4,
       include: {
@@ -30,6 +33,11 @@ export class ProductsService {
     return this.prismaService.product.findMany({
       orderBy: {
         createdAt: 'desc'
+      },
+      where: {
+        inventory: {
+          gt: 0
+        }
       },
       take: 4,
       include: {
@@ -71,6 +79,9 @@ export class ProductsService {
       where: {
         id: {
           in: firstFourMostSoldProductsIds
+        },
+        inventory: {
+          gt: 0
         }
       },
       include: {
@@ -85,6 +96,11 @@ export class ProductsService {
 
   private getFallbackProducts(): Promise<Product[]> {
     return this.prismaService.product.findMany({
+      where: {
+        inventory: {
+          gt: 0
+        }
+      },
       take: 4,
       include: {
         productImages: {
