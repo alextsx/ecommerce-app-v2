@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class ProductService {
   constructor(private prismaService: PrismaService) {}
-  async getProductWithRelatedInformation(slug: string) {
+  public getProductWithRelatedInformation(slug: string) {
     return this.prismaService.product.findUnique({
       where: {
         slug
@@ -24,7 +24,46 @@ export class ProductService {
     });
   }
 
-  async getRelatedProducts(slug: string) {
-    console.log(slug);
+  public async getRelatedProducts(slug: string) {
+    const productInDb = await this.getProductBySlugWithCategory(slug);
+
+    if (!productInDb) {
+      return [];
+    }
+
+    /* 
+      we dont want products with 0 inventory
+      we dont want the same product
+    */
+    return this.prismaService.product.findMany({
+      where: {
+        categoryId: productInDb.categoryId,
+        inventory: {
+          gt: 0
+        },
+        slug: {
+          not: slug
+        }
+      },
+      take: 4,
+      include: {
+        productImages: {
+          select: {
+            url: true
+          }
+        }
+      }
+    });
+  }
+
+  private getProductBySlugWithCategory(slug: string) {
+    return this.prismaService.product.findUnique({
+      where: {
+        slug
+      },
+      select: {
+        categoryId: true
+      }
+    });
   }
 }
