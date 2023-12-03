@@ -4,6 +4,7 @@ import { Public } from 'src/common/decorators';
 import { PaginationResultDto } from 'src/common/dtos/pagination-result.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { TransformDataInterceptor } from 'src/common/interceptors/transformData.interceptor';
+import { TransformNestedDataInterceptor } from 'src/common/interceptors/transformNestedData.interceptor';
 import { ValidatedQuery } from '../decorators/validated-query.decorator';
 import { FilterDto } from '../dtos/filter.dto';
 import { ProductCardDto } from '../dtos/product.dto';
@@ -16,6 +17,7 @@ export class ProductsController {
 
   @Public()
   @Get()
+  @UseInterceptors(new TransformNestedDataInterceptor(ProductCardDto))
   async getFilteredProducts(
     @ValidatedQuery() paginationDto: PaginationDto,
     @ValidatedQuery()
