@@ -6,6 +6,8 @@ import { AtGuard } from './common/guards';
 import { config } from './config';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductModule } from './product/product.module';
+import { ReviewModule } from './review/review.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -16,7 +18,9 @@ import { ProductModule } from './product/product.module';
     AuthModule,
     PrismaModule,
     ProductModule,
-    CategoryModule
+    CategoryModule,
+    ReviewModule,
+    UserModule
   ],
   providers: [
     {
