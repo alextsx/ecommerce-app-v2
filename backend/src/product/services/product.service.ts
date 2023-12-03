@@ -31,13 +31,8 @@ export class ProductService {
       return [];
     }
 
-    /* 
-      we dont want products with 0 inventory
-      we dont want the same product
-    */
-    return this.prismaService.product.findMany({
+    const findManyOptions = {
       where: {
-        categoryId: productInDb.categoryId,
         inventory: {
           gt: 0
         },
@@ -53,6 +48,28 @@ export class ProductService {
           }
         }
       }
+    };
+
+    /* 
+      we dont want products with 0 inventory
+      we dont want the same product
+    */
+    const relatedProducts = await this.prismaService.product.findMany({
+      ...findManyOptions,
+      where: {
+        ...findManyOptions.where,
+        categoryId: productInDb.categoryId
+      }
+    });
+
+    if (relatedProducts.length > 0) {
+      return relatedProducts;
+    }
+
+    //if we get no products back we find random 4
+
+    return this.prismaService.product.findMany({
+      ...findManyOptions
     });
   }
 
