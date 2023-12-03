@@ -14,16 +14,23 @@ export class TransformReviewsResponse implements NestInterceptor {
           data: plainToInstance(ReviewDto, data.data)
         };
         newData.data = newData.data.map((item) => {
-          if (item.user) {
-            item.user = plainToInstance(UserDto, item.user);
-            if (item.user.UserDetails) {
-              item.user = {
-                ...item.user,
-                ...item.user.UserDetails
-              };
-              delete item.user.UserDetails;
-            }
+          if (!item.user) {
+            return item;
           }
+
+          //we have user
+          item.user = plainToInstance(UserDto, item.user);
+          if (!item.user.UserDetails) {
+            return item;
+          }
+
+          //we have user detauls
+          item.user = {
+            ...item.user,
+            ...item.user.UserDetails
+          };
+          delete item.user.UserDetails;
+
           return item;
         });
         return newData;
