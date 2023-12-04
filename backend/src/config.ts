@@ -6,6 +6,7 @@ export interface Config {
   rtExpiresIn: number;
   rtMaxAge: number;
   rtCookieName: string;
+  corsOrigin?: string;
 }
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
@@ -19,5 +20,6 @@ export const config: () => Config = () => ({
   rtExpiresIn: SEVEN_DAYS_IN_SECONDS,
   atExpiresIn: FORTY_SECONDS_IN_SECONDS,
   rtMaxAge: SEVEN_DAYS_IN_MILISECONDS,
-  rtCookieName: 'rt'
+  rtCookieName: 'rt',
+  corsOrigin: process.env.FRONTEND_URL
 });

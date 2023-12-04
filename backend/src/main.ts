@@ -8,11 +8,18 @@ import { Config } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-  app.use(cookieParser());
   const configService = app.get<ConfigService<Config>>(ConfigService);
-  app.useGlobalFilters(new UnauthorizedErrorFilter(configService));
   const port = configService.get('port');
+
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new UnauthorizedErrorFilter(configService));
+
+  app.enableCors({
+    origin: configService.get('corsOrigin'),
+    credentials: true
+  });
+
+  app.use(cookieParser());
   await app.listen(port);
 }
 bootstrap();
