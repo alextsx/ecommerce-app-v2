@@ -2,27 +2,27 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AuthState = {
   email: string | null;
-  accessToken: string | null;
+  access_token: string | null;
 };
 
 type SetCredentialPayload = {
   email: string;
-  accessToken: string;
+  access_token: string;
 };
 
 const initialState: AuthState = {
   email: null,
-  accessToken: null
+  access_token: null
 };
 
 const reducers = {
   setCredentials(state: AuthState, action: PayloadAction<SetCredentialPayload>) {
     state.email = action.payload.email;
-    state.accessToken = action.payload.accessToken;
+    state.access_token = action.payload.access_token;
   },
   deleteCredentials(state: AuthState) {
     state.email = null;
-    state.accessToken = null;
+    state.access_token = null;
   }
 };
 

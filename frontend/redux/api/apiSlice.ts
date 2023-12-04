@@ -10,9 +10,9 @@ const baseQuery = fetchBaseQuery({
   baseUrl: BACKEND_URL,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    const { accessToken } = (getState() as RootState).auth;
-    if (accessToken) {
-      headers.set('Authorization', `Bearer ${accessToken}`);
+    const { access_token } = (getState() as RootState).auth;
+    if (access_token) {
+      headers.set('Authorization', `Bearer ${access_token}`);
     }
     return headers;
   }
@@ -47,13 +47,13 @@ const baseQueryWithReauth = async (
 
   //! we have 401, aka unauthorized, so we need to refresh the token
 
-  const refreshResponse = await baseQuery('refresh/', api, extraOptions);
+  const refreshResponse = await baseQuery('auth/refresh', api, extraOptions);
   if (!refreshResponse?.data) {
     return handleUnauthorized(dispatch, result);
   }
 
-  const { accessToken } = refreshResponse.data as RefreshResponse;
-  if (!accessToken) {
+  const { access_token } = refreshResponse.data as RefreshResponse;
+  if (!access_token) {
     return handleUnauthorized(dispatch, result);
   }
 
@@ -68,7 +68,7 @@ const baseQueryWithReauth = async (
   }
 
   const newCredentials = {
-    accessToken,
+    access_token,
     email
   };
 

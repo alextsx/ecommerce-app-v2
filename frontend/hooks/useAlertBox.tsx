@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AlertBox, AlertBoxProps } from '@/components/AlertBox';
 
 export const useAlertBox = () => {
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string | string[]>('');
   const [title, setTitle] = useState<string>('');
   const [variant, setVariant] = useState<Variant>('default');
   const [visible, setVisible] = useState<boolean>(false);

@@ -1,6 +1,7 @@
 'use client';
 
 import { HTMLAttributes } from 'react';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { Field, FormikProvider, useFormik } from 'formik';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,7 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
+import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
+import { useLoginMutation } from '@/redux/auth/authApiSlice';
+import { setCredentials } from '@/redux/auth/authSlice';
 import { SubmitBtn } from '../button/SubmitBtn';
 
 type LoginFormProps = HTMLAttributes<HTMLFormElement>;
@@ -26,10 +30,9 @@ const initialValues: LoginFormValuesType = {
 
 export const LoginForm = ({ className, ...props }: LoginFormProps) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const login = (props: any): any => {};
-  const isLoading = false;
-
+  const [login, { isLoading }] = useLoginMutation();
   //notifications
   const { visible, show, hide, AlertBoxComponent } = useAlertBox();
   const toggleToast = useToggleToast();
@@ -38,7 +41,10 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
     hide();
     const { email, password, remember } = values;
     try {
-      await login({ email, password, remember }).unwrap();
+      const response = await login({ email, password }).unwrap();
+      const { access_token } = response;
+      dispatch(setCredentials({ access_token, email }));
+      //here we would set localstorage remember me
       toggleToast({
         title: 'Success',
         description: 'You are now logged in!',
@@ -47,11 +53,10 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
       });
 
       router.push('/');
-    } catch (err: any) {
-      /*       const message = parseErrorMessage(err); */
+    } catch (err) {
+      const message = parseErrorResponse(err);
       show({
-        //TODO
-        message: err?.message,
+        message,
         title: 'Error',
         variant: 'destructive'
       });

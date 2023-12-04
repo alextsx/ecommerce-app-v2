@@ -25,8 +25,11 @@ const authApiSlice = apiSlice.injectEndpoints({
     who: builder.query({
       query: () => 'auth/who'
     }),
-    refresh: builder.query({
-      query: () => 'auth/refresh'
+    refresh: builder.mutation({
+      query: () => ({
+        url: 'auth/refresh',
+        method: 'POST'
+      })
     })
   })
 });
@@ -36,5 +39,5 @@ export const {
   useSignupMutation,
   useLogoutMutation,
   useWhoQuery,
-  useRefreshQuery
+  useRefreshMutation
 } = authApiSlice;
