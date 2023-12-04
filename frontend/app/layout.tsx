@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/footer/Footer';
 import { Header } from '@/components/layout/header/Header';
+import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/shadcn-utils';
 import { ReduxProvider } from '@/providers/ReduxProvider';
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
         </ReduxProvider>
+        <Toaster />
         <Footer />
       </body>
     </html>
