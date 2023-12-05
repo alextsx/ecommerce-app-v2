@@ -1,28 +1,51 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ROLES } from './types';
 
 type AuthState = {
   email: string | null;
   access_token: string | null;
+  role: ROLES | null;
 };
 
-type SetCredentialPayload = {
+type SetAuthDetailsPayload = {
   email: string;
-  access_token: string;
+  role: ROLES;
 };
 
 const initialState: AuthState = {
   email: null,
-  access_token: null
+  access_token: null,
+  role: null
 };
 
+/*  
+
 const reducers = {
-  setCredentials(state: AuthState, action: PayloadAction<SetCredentialPayload>) {
+  setUserCredentials(state: AuthState, action: PayloadAction<SetCredentialPayload>) {
     state.email = action.payload.email;
-    state.access_token = action.payload.access_token;
+    state.role = action.payload.role;
+  },
+  updateAccessToken(state: AuthState, action: PayloadAction<string>) {
+    state.access_token = action.payload;
+  },
+  clearUserCredentials(state: AuthState) {
+    state.email = null;
+    state.access_token = null;
+
+*/
+
+const reducers = {
+  setAuthDetails(state: AuthState, action: PayloadAction<SetAuthDetailsPayload>) {
+    state.email = action.payload.email;
+    state.role = action.payload.role;
+  },
+  setAccessToken(state: AuthState, action: PayloadAction<string>) {
+    state.access_token = action.payload;
   },
   deleteCredentials(state: AuthState) {
     state.email = null;
     state.access_token = null;
+    state.role = null;
   }
 };
 
@@ -33,7 +56,7 @@ const authSlice = createSlice({
 });
 
 //actions
-export const { setCredentials, deleteCredentials } = authSlice.actions;
+export const { setAuthDetails, deleteCredentials, setAccessToken } = authSlice.actions;
 
 //reducer
 export default authSlice.reducer;

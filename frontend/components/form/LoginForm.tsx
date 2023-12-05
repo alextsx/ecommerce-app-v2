@@ -8,11 +8,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAlertBox } from '@/hooks/useAlertBox';
+import { useRememberMe } from '@/hooks/useRememberMe';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
 import { useLoginMutation } from '@/redux/auth/authApiSlice';
-import { setCredentials } from '@/redux/auth/authSlice';
+import { setAccessToken, setAuthDetails } from '@/redux/auth/authSlice';
+import { ROLES } from '@/redux/auth/types';
+import { loginSchema } from '@/schemas/authSchema';
 import { SubmitBtn } from '../button/SubmitBtn';
 
 type LoginFormProps = HTMLAttributes<HTMLFormElement>;
@@ -31,6 +34,7 @@ const initialValues: LoginFormValuesType = {
 export const LoginForm = ({ className, ...props }: LoginFormProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { setRememberMe } = useRememberMe();
 
   const [login, { isLoading }] = useLoginMutation();
   //notifications
@@ -43,13 +47,13 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
     try {
       const response = await login({ email, password }).unwrap();
       const { access_token } = response;
-      dispatch(setCredentials({ access_token, email }));
-      //here we would set localstorage remember me
+      dispatch(setAccessToken(access_token));
+      dispatch(setAuthDetails({ email, role: ROLES.CUSTOMER }));
+      setRememberMe(remember);
       toggleToast({
         title: 'Success',
         description: 'You are now logged in!',
         variant: 'default'
-        //TODO constructive
       });
 
       router.push('/');
@@ -66,7 +70,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
   const formik = useFormik({
     initialValues,
     onSubmit,
-    /*     validationSchema: loginSchema, */
+    validationSchema: loginSchema,
     validateOnBlur: true
   });
 

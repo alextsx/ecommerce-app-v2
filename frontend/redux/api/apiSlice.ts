@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { deleteCredentials, setCredentials } from '../auth/authSlice';
-import { WhoResponse } from '../auth/types';
+import { deleteCredentials, setAccessToken, setAuthDetails } from '../auth/authSlice';
+import { ROLES, WhoResponse } from '../auth/types';
 import { RootState } from '../store';
 import { RefreshResponse } from './types';
 
@@ -47,7 +47,11 @@ const baseQueryWithReauth = async (
 
   //! we have 401, aka unauthorized, so we need to refresh the token
 
-  const refreshResponse = await baseQuery('auth/refresh', api, extraOptions);
+  const refreshResponse = await baseQuery(
+    { url: 'auth/refresh', method: 'POST' },
+    api,
+    extraOptions
+  );
   if (!refreshResponse?.data) {
     return handleUnauthorized(dispatch, result);
   }
@@ -57,22 +61,18 @@ const baseQueryWithReauth = async (
     return handleUnauthorized(dispatch, result);
   }
 
-  let email = (getState() as RootState).auth.email;
-  //if auth.email is null we need to call who endpoint to get the email
-  if (!email) {
-    const whoResponse = await baseQuery('who/', api, extraOptions);
+  dispatch(setAccessToken(access_token));
+
+  const authState = (getState() as RootState).auth;
+  const { email, role } = authState;
+
+  if (!email || !role) {
+    const whoResponse = await baseQuery('auth/who', api, extraOptions);
     if (!whoResponse?.data) {
       return handleUnauthorized(dispatch, result);
     }
-    email = (whoResponse.data as WhoResponse).email as string;
+    dispatch(setAuthDetails(whoResponse.data as WhoResponse));
   }
-
-  const newCredentials = {
-    access_token,
-    email
-  };
-
-  dispatch(setCredentials(newCredentials));
 
   result = await baseQuery(args, api, extraOptions);
   return result;

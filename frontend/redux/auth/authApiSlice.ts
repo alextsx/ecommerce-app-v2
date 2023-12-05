@@ -22,7 +22,7 @@ const authApiSlice = apiSlice.injectEndpoints({
         body: credentials
       })
     }),
-    who: builder.query({
+    who: builder.query<void, void>({
       query: () => 'auth/who'
     }),
     refresh: builder.mutation({
