@@ -3,9 +3,14 @@ export type Tokens = {
   refresh_token: string;
 };
 
-export type JwtPayload = {
+export type JwtBasePayload = {
   sub: string;
-  email: string;
   iat: number;
   exp: number;
 };
+
+export type RtPayload = {
+  refreshToken: string;
+} & JwtBasePayload;
+
+export type AtPayload = JwtBasePayload;

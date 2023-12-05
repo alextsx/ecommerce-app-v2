@@ -108,4 +108,16 @@ export class AuthService {
       }
     });
   }
+
+  async getAuthenticatedUser({ userId }: { userId: string }) {
+    return this.prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+      select: {
+        email: true,
+        role: true
+      }
+    });
+  }
 }

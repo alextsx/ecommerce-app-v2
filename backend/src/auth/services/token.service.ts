@@ -80,6 +80,7 @@ export class TokenService {
   }
 
   public async signTokensForUser(userId: string) {
+    console.log(`signTokensForUser userId: ${userId}`);
     const accessTokenPromise = this.jwtService.signAsync(
       {
         sub: userId

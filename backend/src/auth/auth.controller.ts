@@ -1,7 +1,8 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import { GetCurrentUser, Public } from 'src/common/decorators';
+import { GetUserInfoFromAtPayload, Public } from 'src/common/decorators';
+import { GetUserInfoFromRtPayload } from 'src/common/decorators/get-userinfo-from-atpayload';
 import { RtGuard } from 'src/common/guards';
 import { Config } from 'src/config';
 import { AuthDto } from './dtos';
@@ -47,8 +48,8 @@ export class AuthController {
   @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
   async logout(
-    @GetCurrentUser('id') userId: string,
-    @GetCurrentUser('refreshToken') refreshToken: string,
+    @GetUserInfoFromRtPayload('sub') userId: string,
+    @GetUserInfoFromRtPayload('refreshToken') refreshToken: string,
     @Res({ passthrough: true }) response: Response
   ) {
     await this.authService.logout({ userId, refreshToken });
@@ -68,8 +69,8 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   async refreshTokens(
-    @GetCurrentUser('refreshToken') refreshToken: string,
-    @GetCurrentUser('id') userId: string,
+    @GetUserInfoFromRtPayload('refreshToken') refreshToken: string,
+    @GetUserInfoFromRtPayload('sub') userId: string,
     @Res({ passthrough: true }) response: Response
   ) {
     const { access_token, refresh_token } = await this.authService.refreshTokens({
@@ -85,5 +86,11 @@ export class AuthController {
     });
 
     response.send({ access_token });
+  }
+
+  @Get('who')
+  @HttpCode(HttpStatus.OK)
+  async getAuthenticatedUser(@GetUserInfoFromAtPayload('sub') userId: string) {
+    return this.authService.getAuthenticatedUser({ userId });
   }
 }

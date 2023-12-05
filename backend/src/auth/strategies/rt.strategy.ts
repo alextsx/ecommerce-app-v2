@@ -6,7 +6,7 @@ import { Strategy } from 'passport-jwt';
 import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TokenService } from '../services/token.service';
-import { JwtPayload } from '../types';
+import { JwtBasePayload } from '../types';
 
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
@@ -26,8 +26,9 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     this.rtCookieName = rtCookieName;
   }
 
-  async validate(req: Request, payload: JwtPayload) {
+  async validate(req: Request, payload: JwtBasePayload) {
     const refreshToken = req.cookies?.[this.rtCookieName];
+    console.log(`sub ${payload.sub} refreshToken ${refreshToken}`);
 
     const { sub } = payload;
 
