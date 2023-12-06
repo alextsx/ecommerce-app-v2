@@ -11,7 +11,7 @@ import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
-import { useLoginMutation } from '@/redux/auth/auth-api.slice';
+import { useLoginMutation } from '@/redux/auth/auth.api.slice';
 import { setAccessToken, setAuthDetails } from '@/redux/auth/auth.slice';
 import { ROLES } from '@/redux/auth/types';
 import { loginSchema } from '@/schemas/auth.schema';

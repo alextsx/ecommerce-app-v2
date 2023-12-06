@@ -1,16 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ROLES } from './types';
-
-type AuthState = {
-  email: string | null;
-  access_token: string | null;
-  role: ROLES | null;
-};
-
-type SetAuthDetailsPayload = {
-  email: string;
-  role: ROLES;
-};
+import { AuthState, SetAuthDetailsPayload } from './types';
 
 const initialState: AuthState = {
   email: null,
