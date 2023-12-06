@@ -9,6 +9,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 
+const baseRefreshTokenCookieOptions: CookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax'
+};
+
 @Injectable()
 export class TokenService {
   public constructor(
@@ -148,15 +153,11 @@ export class TokenService {
   }
 
   public getResponseRtCookieOptions(remember: boolean): CookieOptions {
-    const baseOptions: CookieOptions = {
-      httpOnly: true,
-      sameSite: 'lax'
-    };
     return remember
       ? {
-          ...baseOptions,
+          ...baseRefreshTokenCookieOptions,
           maxAge: this.configService.get('rtMaxAge')
         }
-      : baseOptions;
+      : baseRefreshTokenCookieOptions;
   }
 }
