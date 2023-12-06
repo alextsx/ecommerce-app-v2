@@ -78,32 +78,30 @@ export class TokenService {
       }
     });
   }
+  private async signToken(sub: string, secret: string, expiresIn: string) {
+    return this.jwtService.signAsync(
+      { sub },
+      {
+        secret,
+        expiresIn
+      }
+    );
+  }
 
   public async signTokensForUser(userId: string) {
-    console.log(`signTokensForUser userId: ${userId}`);
-    const accessTokenPromise = this.jwtService.signAsync(
-      {
-        sub: userId
-      },
-      {
-        secret: this.configService.get('atSecret'),
-        expiresIn: this.configService.get('atExpiresIn')
-      }
+    const signAccessToken = this.signToken(
+      userId,
+      this.configService.get('atSecret'),
+      this.configService.get('atExpiresIn')
     );
-    const refreshTokenPromise = this.jwtService.signAsync(
-      {
-        sub: userId
-      },
-      {
-        secret: this.configService.get('rtSecret'),
-        expiresIn: this.configService.get('rtExpiresIn')
-      }
+    const signRefreshToken = this.signToken(
+      userId,
+      this.configService.get('rtSecret'),
+      this.configService.get('rtExpiresIn')
     );
-    const [at, rt] = await Promise.all([accessTokenPromise, refreshTokenPromise]);
 
-    return {
-      access_token: at,
-      refresh_token: rt
-    };
+    const [access_token, refresh_token] = await Promise.all([signAccessToken, signRefreshToken]);
+
+    return { access_token, refresh_token };
   }
 }
