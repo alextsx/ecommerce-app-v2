@@ -1,9 +1,16 @@
+'use client';
+
+import { useSelector } from 'react-redux';
 import { DropdownMenu, DropdownMenuContent } from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useFetchAndSetUser } from '@/hooks/useFetchAndSetUser';
+import { selectAccessToken } from '@/redux/auth/auth.slice';
 import { UserDropdownBtn } from './UserDropdownBtn';
 import { UserDropdownContent } from './UserDropdownContent';
-import { UserDropdownHeader } from './UserDropdownHeader';
+import { UserDropdownHeaderGuest } from './UserDropdownHeaderGuest';
+import { UserDropdownHeaderUser } from './UserDropdownHeaderUser';
 
-const labelGroups = [
+const labelGroupsUser = [
   [
     {
       label: 'Profile',
@@ -20,13 +27,44 @@ const labelGroups = [
   ]
 ];
 
+const labelGroupsGuest = [
+  [
+    {
+      label: 'Login',
+      shortcut: '⇧⌘I',
+      href: '/login'
+    }
+  ],
+  [
+    {
+      label: 'Register',
+      shortcut: '⇧⌘U',
+      href: '/registration'
+    }
+  ]
+];
+
 export function UserDropdown() {
-  return (
+  const { isLoading } = useFetchAndSetUser();
+
+  const isLoggedIn = useSelector(selectAccessToken);
+
+  return isLoading ? (
+    <Skeleton className="h-8 w-8 rounded-full" />
+  ) : isLoggedIn ? (
     <DropdownMenu>
       <UserDropdownBtn />
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <UserDropdownHeader />
-        <UserDropdownContent labelGroups={labelGroups} />
+        <UserDropdownHeaderUser />
+        <UserDropdownContent labelGroups={labelGroupsUser} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : (
+    <DropdownMenu>
+      <UserDropdownBtn />
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <UserDropdownHeaderGuest />
+        <UserDropdownContent labelGroups={labelGroupsGuest} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
