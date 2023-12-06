@@ -81,6 +81,7 @@ export class AuthService {
       throw new InvalidRefreshTokenException();
     }
 
+    //TODO new expiration date should be calculated based on the old one, not hardcoded
     const newTokens = await this.tokenService.signTokensForUser(userId);
 
     await this.tokenService.replaceRefreshToken({
