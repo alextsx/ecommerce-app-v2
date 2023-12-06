@@ -30,7 +30,8 @@ export class AuthService {
 
     await this.tokenService.updateOrInsertRefreshToken({
       user,
-      tokens
+      tokens,
+      remember: dto.remember
     });
 
     return tokens;
@@ -55,8 +56,10 @@ export class AuthService {
   async logout({ userId, refreshToken }: { userId: string; refreshToken: string }) {
     await this.prisma.refreshToken.delete({
       where: {
-        userId,
-        refreshToken
+        userId_refreshToken: {
+          userId,
+          refreshToken
+        }
       }
     });
   }
@@ -64,8 +67,10 @@ export class AuthService {
   async refreshTokens({ userId, refreshToken }: { userId: string; refreshToken: string }) {
     const foundRefreshToken = await this.prisma.refreshToken.findUnique({
       where: {
-        userId,
-        refreshToken
+        userId_refreshToken: {
+          userId,
+          refreshToken
+        }
       },
       include: {
         user: true
@@ -76,15 +81,20 @@ export class AuthService {
       throw new InvalidRefreshTokenException();
     }
 
-    const tokens = await this.tokenService.signTokensForUser(userId);
+    const newTokens = await this.tokenService.signTokensForUser(userId);
 
     await this.tokenService.replaceRefreshToken({
       userId,
       oldRefreshToken: refreshToken,
-      newRefreshToken: tokens.refresh_token
+      newRefreshToken: newTokens.refresh_token,
+      remember: foundRefreshToken.remember
     });
 
-    return tokens;
+    return {
+      access_token: newTokens.access_token,
+      refresh_token: newTokens.refresh_token,
+      remember: foundRefreshToken.remember
+    };
   }
 
   private findUserByEmailWithRefreshTokens(email: string) {

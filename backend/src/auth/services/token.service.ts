@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshToken, User } from '@prisma/client';
+import { CookieOptions } from 'express';
 import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,12 +25,14 @@ export class TokenService {
   */
   public updateOrInsertRefreshToken({
     user,
-    tokens
+    tokens,
+    remember
   }: {
     user: User & {
       refreshTokens: RefreshToken[];
     };
     tokens: Tokens;
+    remember: boolean;
   }) {
     const { refresh_token: newRefreshToken } = tokens;
     const sortedUserRefreshTokens = user.refreshTokens.sort(
@@ -39,35 +42,62 @@ export class TokenService {
     if (sortedUserRefreshTokens.length === 6) {
       return this.prisma.refreshToken.update({
         where: {
-          refreshToken: sortedUserRefreshTokens[0].refreshToken
+          userId_refreshToken: {
+            refreshToken: sortedUserRefreshTokens[0].refreshToken,
+            userId: user.id
+          }
         },
         data: {
-          refreshToken: newRefreshToken
+          refreshToken: newRefreshToken,
+          remember
         }
       });
     }
     return this.insertRefreshToken({
       userId: user.id,
-      refreshToken: newRefreshToken
+      refreshToken: newRefreshToken,
+      remember
     });
   }
-  public replaceRefreshToken({ userId, oldRefreshToken, newRefreshToken }) {
+  public replaceRefreshToken({
+    userId,
+    oldRefreshToken,
+    newRefreshToken,
+    remember
+  }: {
+    userId: string;
+    oldRefreshToken: string;
+    newRefreshToken: string;
+    remember: boolean;
+  }) {
     return this.prisma.refreshToken.update({
       where: {
-        userId,
-        refreshToken: oldRefreshToken
+        userId_refreshToken: {
+          userId,
+          refreshToken: oldRefreshToken
+        }
       },
       data: {
+        remember,
         refreshToken: newRefreshToken
       }
     });
   }
 
-  public insertRefreshToken({ userId, refreshToken }) {
+  public insertRefreshToken({
+    userId,
+    refreshToken,
+    remember
+  }: {
+    userId: string;
+    refreshToken: string;
+    remember: boolean;
+  }) {
     return this.prisma.refreshToken.create({
       data: {
         refreshToken,
-        userId
+        userId,
+        remember
       }
     });
   }
@@ -115,5 +145,18 @@ export class TokenService {
     const [access_token, refresh_token] = await Promise.all([signAccessToken, signRefreshToken]);
 
     return { access_token, refresh_token };
+  }
+
+  public getResponseRtCookieOptions(remember: boolean): CookieOptions {
+    const baseOptions: CookieOptions = {
+      httpOnly: true,
+      sameSite: 'lax'
+    };
+    return remember
+      ? {
+          ...baseOptions,
+          maxAge: this.configService.get('rtMaxAge')
+        }
+      : baseOptions;
   }
 }

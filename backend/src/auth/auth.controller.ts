@@ -8,6 +8,7 @@ import { Config } from 'src/config';
 import { AuthDto } from './dtos';
 import { LoginDto } from './dtos/auth.dto';
 import { AuthService } from './services/auth.service';
+import { TokenService } from './services/token.service';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,7 @@ export class AuthController {
   private readonly rtMaxAge: number;
   constructor(
     private authService: AuthService,
+    private tokenService: TokenService,
     private configService: ConfigService<Config>
   ) {
     this.rtCookieName = configService.get('rtCookieName');
@@ -34,12 +36,9 @@ export class AuthController {
   async signInLocal(@Body() dto: LoginDto, @Res() response: Response) {
     const { access_token, refresh_token } = await this.authService.signInLocal(dto);
     const { remember } = dto;
+    const cookieOptions = this.tokenService.getResponseRtCookieOptions(remember);
 
-    response.cookie(
-      this.rtCookieName,
-      refresh_token,
-      remember ? { httpOnly: true, maxAge: this.configService.get('rtMaxAge') } : { httpOnly: true } // session cookie
-    );
+    response.cookie(this.rtCookieName, refresh_token, cookieOptions);
 
     response.send({ access_token });
   }
@@ -72,16 +71,13 @@ export class AuthController {
     @GetUserInfoFromRtPayload('sub') userId: string,
     @Res({ passthrough: true }) response: Response
   ) {
-    const { access_token, refresh_token } = await this.authService.refreshTokens({
+    const { access_token, refresh_token, remember } = await this.authService.refreshTokens({
       userId,
       refreshToken
     });
+    const cookieOptions = this.tokenService.getResponseRtCookieOptions(remember);
 
-    response.cookie(this.rtCookieName, refresh_token, {
-      httpOnly: true,
-      maxAge: this.rtMaxAge,
-      sameSite: 'lax'
-    });
+    response.cookie(this.rtCookieName, refresh_token, cookieOptions);
 
     response.send({ access_token });
   }

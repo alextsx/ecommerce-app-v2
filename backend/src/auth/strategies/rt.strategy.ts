@@ -34,8 +34,10 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
 
     const foundRefreshToken = await this.prisma.refreshToken.findUnique({
       where: {
-        userId: sub,
-        refreshToken
+        userId_refreshToken: {
+          userId: sub,
+          refreshToken
+        }
       }
     });
 

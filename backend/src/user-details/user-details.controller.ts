@@ -12,7 +12,6 @@ export class UserDetailsController {
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(new TransformDataInterceptor(UserDetailsDto))
   public async getUserDetails(@GetUserInfoFromAtPayload('sub') userId: string) {
-    console.log(userId);
     return this.userDetailsService.getUserDetails({
       userId
     });
