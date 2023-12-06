@@ -1,13 +1,15 @@
-import { ArgumentsHost, Catch, ExceptionFilter, UnauthorizedException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { Config } from 'src/config';
+import { InvalidRefreshTokenException } from '../exceptions/invalid-refreshtoken.exception';
 
-@Catch(UnauthorizedException)
-export class UnauthorizedErrorFilter implements ExceptionFilter {
+@Catch(InvalidRefreshTokenException)
+export class InvalidRefreshTokenExceptionFilter implements ExceptionFilter {
   public constructor(private configService: ConfigService<Config>) {}
-  catch(exception: UnauthorizedException, host: ArgumentsHost) {
+  catch(exception: InvalidRefreshTokenException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+
     const response = ctx.getResponse<Response>();
     response.clearCookie(this.configService.get('rtCookieName'));
 

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
-import { UnauthorizedErrorFilter } from './common/filters/unauthorized-error.filter';
+import { InvalidRefreshTokenExceptionFilter } from './common/filters/invalid-refreshtoken.filter';
 import { Config } from './config';
 
 async function bootstrap() {
@@ -12,7 +12,7 @@ async function bootstrap() {
   const port = configService.get('port');
 
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new UnauthorizedErrorFilter(configService));
+  app.useGlobalFilters(new InvalidRefreshTokenExceptionFilter(configService));
 
   app.enableCors({
     origin: configService.get('corsOrigin'),

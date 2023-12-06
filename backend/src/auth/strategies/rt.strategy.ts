@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
+import { InvalidRefreshTokenException } from 'src/common/exceptions/invalid-refreshtoken.exception';
 import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TokenService } from '../services/token.service';
@@ -28,7 +29,6 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
 
   async validate(req: Request, payload: JwtBasePayload) {
     const refreshToken = req.cookies?.[this.rtCookieName];
-    console.log(`sub ${payload.sub} refreshToken ${refreshToken}`);
 
     const { sub } = payload;
 
@@ -42,7 +42,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     //refresh token reuse
     if (!foundRefreshToken) {
       await this.tokenService.deleteEveryRefreshTokenByUserId(sub);
-      throw new UnauthorizedException('Access denied');
+      throw new InvalidRefreshTokenException();
     }
 
     return {

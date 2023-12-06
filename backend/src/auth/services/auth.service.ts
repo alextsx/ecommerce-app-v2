@@ -1,9 +1,5 @@
-import {
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException
-} from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
+import { InvalidRefreshTokenException } from 'src/common/exceptions/invalid-refreshtoken.exception';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from '../dtos';
 import { Tokens } from '../types';
@@ -76,7 +72,7 @@ export class AuthService {
     });
 
     if (!foundRefreshToken) {
-      throw new UnauthorizedException('Access denied');
+      throw new InvalidRefreshTokenException();
     }
 
     const tokens = await this.tokenService.signTokensForUser(userId);

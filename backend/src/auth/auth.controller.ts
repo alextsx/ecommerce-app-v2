@@ -36,8 +36,8 @@ export class AuthController {
     response.cookie(this.rtCookieName, refresh_token, {
       httpOnly: true,
       maxAge: this.rtMaxAge,
-      sameSite: 'strict',
-      secure: true
+      //i know this is the default value, but i want to be explicit
+      sameSite: 'lax'
     });
 
     response.send({ access_token });
@@ -56,9 +56,7 @@ export class AuthController {
 
     response.cookie(this.rtCookieName, '', {
       httpOnly: true,
-      maxAge: 0,
-      sameSite: 'strict',
-      secure: true
+      maxAge: 0
     });
 
     response.send();
@@ -81,8 +79,7 @@ export class AuthController {
     response.cookie(this.rtCookieName, refresh_token, {
       httpOnly: true,
       maxAge: this.rtMaxAge,
-      sameSite: 'strict',
-      secure: true
+      sameSite: 'lax'
     });
 
     response.send({ access_token });
