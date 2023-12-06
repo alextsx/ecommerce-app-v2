@@ -1,4 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import { MaybePromise } from '@reduxjs/toolkit/dist/query/tsHelpers';
+import {
+  createApi,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta
+} from '@reduxjs/toolkit/query/react';
 import { deleteCredentials, setAccessToken, setAuthDetails } from '../auth/auth.slice';
 import { ROLES, WhoResponse } from '../auth/types';
 import { RootState } from '../store';
@@ -27,6 +34,11 @@ const handleUnauthorized = (dispatch: Function, result: any) => {
   return result;
 };
 
+let isRefreshing = false;
+let refreshPromise: MaybePromise<
+  QueryReturnValue<unknown, FetchBaseQueryError, FetchBaseQueryMeta>
+> | null = null;
+
 const baseQueryWithReauth = async (
   args: BaseQueryArgs,
   api: BaseQueryApi,
@@ -35,23 +47,27 @@ const baseQueryWithReauth = async (
   let result = await baseQuery(args, api, extraOptions);
   const { dispatch, getState } = api;
 
-  //! everything is ok, we don't need to refresh the token
+  // everything is ok, we don't need to refresh the token
   if (!result.error) {
     return result;
   }
 
-  //! something went wrong, but it's not 401, so we don't need to refresh the token
+  // something went wrong, but it's not 401, so we don't need to refresh the token
   if (result.error?.status !== 401) {
     return result;
   }
 
-  //! we have 401, aka unauthorized, so we need to refresh the token
+  // we have 401, aka unauthorized, so we need to refresh the token
 
-  const refreshResponse = await baseQuery(
-    { url: 'auth/refresh', method: 'POST' },
-    api,
-    extraOptions
-  );
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshPromise = baseQuery({ url: 'auth/refresh', method: 'POST' }, api, extraOptions);
+  }
+
+  const refreshResponse = await refreshPromise;
+  isRefreshing = false;
+  refreshPromise = null;
+
   if (!refreshResponse?.data) {
     return handleUnauthorized(dispatch, result);
   }
