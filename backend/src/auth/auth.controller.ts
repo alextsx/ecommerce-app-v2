@@ -36,7 +36,7 @@ export class AuthController {
     const { remember } = dto;
 
     response.cookie(
-      'refresh_token',
+      this.rtCookieName,
       refresh_token,
       remember ? { httpOnly: true, maxAge: this.configService.get('rtMaxAge') } : { httpOnly: true } // session cookie
     );
