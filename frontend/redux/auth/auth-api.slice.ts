@@ -1,4 +1,4 @@
-import { apiSlice } from '../api/apiSlice';
+import { apiSlice } from '../api/api.slice';
 import { LoginResponse, WhoResponse } from './types';
 
 const authApiSlice = apiSlice.injectEndpoints({

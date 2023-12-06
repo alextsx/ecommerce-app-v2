@@ -11,10 +11,10 @@ import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
-import { useLoginMutation } from '@/redux/auth/authApiSlice';
-import { setAccessToken, setAuthDetails } from '@/redux/auth/authSlice';
+import { useLoginMutation } from '@/redux/auth/auth-api.slice';
+import { setAccessToken, setAuthDetails } from '@/redux/auth/auth.slice';
 import { ROLES } from '@/redux/auth/types';
-import { loginSchema } from '@/schemas/authSchema';
+import { loginSchema } from '@/schemas/auth.schema';
 import { SubmitBtn } from '../button/SubmitBtn';
 
 type LoginFormProps = HTMLAttributes<HTMLFormElement>;

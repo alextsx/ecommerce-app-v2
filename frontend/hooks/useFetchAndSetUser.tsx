@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useWhoQuery } from '@/redux/auth/authApiSlice';
-import { setAuthDetails } from '@/redux/auth/authSlice';
+import { useWhoQuery } from '@/redux/auth/auth-api.slice';
+import { setAuthDetails } from '@/redux/auth/auth.slice';
 
 export const useFetchAndSetUser = () => {
   const { data: user, isLoading, isFetching } = useWhoQuery();

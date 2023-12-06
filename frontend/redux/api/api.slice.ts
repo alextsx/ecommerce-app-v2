@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { deleteCredentials, setAccessToken, setAuthDetails } from '../auth/authSlice';
+import { deleteCredentials, setAccessToken, setAuthDetails } from '../auth/auth.slice';
 import { ROLES, WhoResponse } from '../auth/types';
 import { RootState } from '../store';
 import { RefreshResponse } from './types';

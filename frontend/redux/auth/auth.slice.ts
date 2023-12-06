@@ -18,22 +18,6 @@ const initialState: AuthState = {
   role: null
 };
 
-/*  
-
-const reducers = {
-  setUserCredentials(state: AuthState, action: PayloadAction<SetCredentialPayload>) {
-    state.email = action.payload.email;
-    state.role = action.payload.role;
-  },
-  updateAccessToken(state: AuthState, action: PayloadAction<string>) {
-    state.access_token = action.payload;
-  },
-  clearUserCredentials(state: AuthState) {
-    state.email = null;
-    state.access_token = null;
-
-*/
-
 const reducers = {
   setAuthDetails(state: AuthState, action: PayloadAction<SetAuthDetailsPayload>) {
     state.email = action.payload.email;
