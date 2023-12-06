@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 import { AuthState, SetAuthDetailsPayload } from './types';
 
 const initialState: AuthState = {
@@ -27,6 +28,10 @@ const authSlice = createSlice({
   initialState,
   reducers
 });
+
+//selectors
+export const selectEmail = (state: RootState): string | null => state.auth.email;
+export const selectAccessToken = (state: RootState): string | null => state.auth.access_token;
 
 //actions
 export const { setAuthDetails, deleteCredentials, setAccessToken } = authSlice.actions;
