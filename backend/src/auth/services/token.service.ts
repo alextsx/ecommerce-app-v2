@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshToken, User } from '@prisma/client';
 import { Config } from 'src/config';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 
@@ -30,7 +31,7 @@ export class TokenService {
     };
     tokens: Tokens;
   }) {
-    const { refresh_token } = tokens;
+    const { refresh_token: newRefreshToken } = tokens;
     const sortedUserRefreshTokens = user.refreshTokens.sort(
       (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()
     );
@@ -41,13 +42,13 @@ export class TokenService {
           refreshToken: sortedUserRefreshTokens[0].refreshToken
         },
         data: {
-          refreshToken: refresh_token
+          refreshToken: newRefreshToken
         }
       });
     }
     return this.insertRefreshToken({
       userId: user.id,
-      refreshToken: refresh_token
+      refreshToken: newRefreshToken
     });
   }
   public replaceRefreshToken({ userId, oldRefreshToken, newRefreshToken }) {
@@ -78,9 +79,20 @@ export class TokenService {
       }
     });
   }
-  private async signToken(sub: string, secret: string, expiresIn: string) {
+  private async signToken({
+    sub,
+    secret,
+    expiresIn
+  }: {
+    sub: string;
+    secret: string;
+    expiresIn: string;
+  }) {
     return this.jwtService.signAsync(
-      { sub },
+      {
+        sub,
+        jti: uuidv4()
+      },
       {
         secret,
         expiresIn
@@ -89,16 +101,16 @@ export class TokenService {
   }
 
   public async signTokensForUser(userId: string) {
-    const signAccessToken = this.signToken(
-      userId,
-      this.configService.get('atSecret'),
-      this.configService.get('atExpiresIn')
-    );
-    const signRefreshToken = this.signToken(
-      userId,
-      this.configService.get('rtSecret'),
-      this.configService.get('rtExpiresIn')
-    );
+    const signAccessToken = this.signToken({
+      sub: userId,
+      secret: this.configService.get('atSecret'),
+      expiresIn: this.configService.get('atExpiresIn')
+    });
+    const signRefreshToken = this.signToken({
+      sub: userId,
+      secret: this.configService.get('rtSecret'),
+      expiresIn: this.configService.get('rtExpiresIn')
+    });
 
     const [access_token, refresh_token] = await Promise.all([signAccessToken, signRefreshToken]);
 
