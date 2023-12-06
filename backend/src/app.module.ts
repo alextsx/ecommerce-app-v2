@@ -7,6 +7,7 @@ import { config } from './config';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
+import { UserDetailsModule } from './user-details/user-details.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -20,7 +21,8 @@ import { UserModule } from './user/user.module';
     ProductModule,
     CategoryModule,
     ReviewModule,
-    UserModule
+    UserModule,
+    UserDetailsModule
   ],
   providers: [
     {
