@@ -20,6 +20,6 @@ export const config: () => Config = () => ({
   rtExpiresIn: SEVEN_DAYS_IN_SECONDS,
   atExpiresIn: FORTY_SECONDS_IN_SECONDS,
   rtMaxAge: SEVEN_DAYS_IN_MILISECONDS,
-  rtCookieName: 'rt',
+  rtCookieName: process.env.RT_COOKIE_NAME || 'refresh_token',
   corsOrigin: process.env.FRONTEND_URL
 });
