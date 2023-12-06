@@ -8,7 +8,8 @@ const authApiSlice = apiSlice.injectEndpoints({
         url: 'auth/local/signin',
         method: 'POST',
         body: credentials
-      })
+      }),
+      invalidatesTags: ['auth-details', 'user-details']
     }),
     logout: builder.mutation({
       query: () => ({
@@ -24,7 +25,8 @@ const authApiSlice = apiSlice.injectEndpoints({
       })
     }),
     who: builder.query<WhoResponse, void>({
-      query: () => 'auth/who'
+      query: () => 'auth/who',
+      providesTags: ['auth-details']
     }),
     refresh: builder.mutation({
       query: () => ({

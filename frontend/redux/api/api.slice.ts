@@ -6,8 +6,7 @@ import {
   FetchBaseQueryError,
   FetchBaseQueryMeta
 } from '@reduxjs/toolkit/query/react';
-import { deleteCredentials, setAccessToken, setAuthDetails } from '../auth/auth.slice';
-import { ROLES, WhoResponse } from '../auth/types';
+import { deleteCredentials, setAccessToken } from '../auth/auth.slice';
 import { RootState } from '../store';
 import { RefreshResponse } from './types';
 
@@ -86,5 +85,6 @@ const baseQueryWithReauth = async (
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  endpoints: () => ({})
+  endpoints: () => ({}),
+  tagTypes: ['auth-details', 'user-details']
 });
