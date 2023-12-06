@@ -8,7 +8,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAlertBox } from '@/hooks/useAlertBox';
-import { useRememberMe } from '@/hooks/useRememberMe';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
@@ -34,7 +33,6 @@ const initialValues: LoginFormValuesType = {
 export const LoginForm = ({ className, ...props }: LoginFormProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { setRememberMe } = useRememberMe();
 
   const [login, { isLoading }] = useLoginMutation();
   //notifications
@@ -45,11 +43,10 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
     hide();
     const { email, password, remember } = values;
     try {
-      const response = await login({ email, password }).unwrap();
+      const response = await login({ email, password, remember }).unwrap();
       const { access_token } = response;
       dispatch(setAccessToken(access_token));
       dispatch(setAuthDetails({ email, role: ROLES.CUSTOMER }));
-      setRememberMe(remember);
       toggleToast({
         title: 'Success',
         description: 'You are now logged in!',

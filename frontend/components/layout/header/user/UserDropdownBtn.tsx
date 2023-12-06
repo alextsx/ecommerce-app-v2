@@ -5,14 +5,9 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useFetchAndSetUser } from '@/hooks/useFetchAndSetUser';
-import { useRememberMe } from '@/hooks/useRememberMe';
 
 export const UserDropdownBtn = () => {
-  const { getRememberMe } = useRememberMe();
-
-  const { isLoading } = useFetchAndSetUser({
-    skip: !getRememberMe()
-  });
+  const { isLoading } = useFetchAndSetUser();
 
   return isLoading ? (
     <Skeleton className="h-8 w-8 rounded-full" />

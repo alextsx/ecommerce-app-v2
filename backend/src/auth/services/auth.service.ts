@@ -2,6 +2,7 @@ import { ConflictException, ForbiddenException, Injectable } from '@nestjs/commo
 import { InvalidRefreshTokenException } from 'src/common/exceptions/invalid-refreshtoken.exception';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from '../dtos';
+import { LoginDto } from '../dtos/auth.dto';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
@@ -14,7 +15,7 @@ export class AuthService {
     private tokenService: TokenService
   ) {}
 
-  async signInLocal(dto: AuthDto): Promise<Tokens> {
+  async signInLocal(dto: LoginDto): Promise<Tokens> {
     const user = await this.findUserByEmailWithRefreshTokens(dto.email);
     if (!user) {
       throw new ForbiddenException('Invalid credentials');

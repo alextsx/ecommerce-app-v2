@@ -6,6 +6,7 @@ import { GetUserInfoFromRtPayload } from 'src/common/decorators/get-userinfo-fro
 import { RtGuard } from 'src/common/guards';
 import { Config } from 'src/config';
 import { AuthDto } from './dtos';
+import { LoginDto } from './dtos/auth.dto';
 import { AuthService } from './services/auth.service';
 
 @Controller('auth')
@@ -30,15 +31,15 @@ export class AuthController {
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
-  async signInLocal(@Body() dto: AuthDto, @Res() response: Response) {
+  async signInLocal(@Body() dto: LoginDto, @Res() response: Response) {
     const { access_token, refresh_token } = await this.authService.signInLocal(dto);
+    const { remember } = dto;
 
-    response.cookie(this.rtCookieName, refresh_token, {
-      httpOnly: true,
-      maxAge: this.rtMaxAge,
-      //i know this is the default value, but i want to be explicit
-      sameSite: 'lax'
-    });
+    response.cookie(
+      'refresh_token',
+      refresh_token,
+      remember ? { httpOnly: true, maxAge: this.configService.get('rtMaxAge') } : { httpOnly: true } // session cookie
+    );
 
     response.send({ access_token });
   }

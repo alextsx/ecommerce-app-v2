@@ -3,20 +3,11 @@ import { useDispatch } from 'react-redux';
 import { useWhoQuery } from '@/redux/auth/authApiSlice';
 import { setAuthDetails } from '@/redux/auth/authSlice';
 
-export const useFetchAndSetUser = ({ skip = false }: { skip?: boolean }) => {
-  const {
-    data: user,
-    isLoading,
-    isFetching
-  } = useWhoQuery(undefined, {
-    skip
-  });
+export const useFetchAndSetUser = () => {
+  const { data: user, isLoading, isFetching } = useWhoQuery();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (skip) {
-      return;
-    }
     if (isLoading || isFetching) {
       return;
     }
@@ -24,7 +15,7 @@ export const useFetchAndSetUser = ({ skip = false }: { skip?: boolean }) => {
     if (user) {
       dispatch(setAuthDetails(user));
     }
-  }, [user, isLoading, isFetching, dispatch, skip]);
+  }, [user, isLoading, isFetching, dispatch]);
 
   return { isLoading };
 };

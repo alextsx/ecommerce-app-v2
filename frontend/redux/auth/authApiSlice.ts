@@ -1,8 +1,9 @@
 import { apiSlice } from '../api/apiSlice';
+import { LoginResponse, WhoResponse } from './types';
 
 const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation({
+    login: builder.mutation<LoginResponse, { email: string; password: string; remember: boolean }>({
       query: (credentials) => ({
         url: 'auth/local/signin',
         method: 'POST',
@@ -22,7 +23,7 @@ const authApiSlice = apiSlice.injectEndpoints({
         body: credentials
       })
     }),
-    who: builder.query<void, void>({
+    who: builder.query<WhoResponse, void>({
       query: () => 'auth/who'
     }),
     refresh: builder.mutation({
