@@ -79,17 +79,6 @@ const baseQueryWithReauth = async (
 
   dispatch(setAccessToken(access_token));
 
-  const authState = (getState() as RootState).auth;
-  const { email, role } = authState;
-
-  if (!email || !role) {
-    const whoResponse = await baseQuery('auth/who', api, extraOptions);
-    if (!whoResponse?.data) {
-      return handleUnauthorized(dispatch, result);
-    }
-    dispatch(setAuthDetails(whoResponse.data as WhoResponse));
-  }
-
   result = await baseQuery(args, api, extraOptions);
   return result;
 };
