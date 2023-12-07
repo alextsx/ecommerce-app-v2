@@ -1,4 +1,5 @@
 import { Logo } from '@/components/layout/Logo';
+import { CartDropdownBtn } from './cart/CartDropdownBtn';
 import { NavLinks } from './nav-links/NavLinks';
 import { UserDropdown } from './user/UserDropdown';
 
@@ -12,6 +13,7 @@ export const Header = () => {
           <NavLinks />
         </div>
         <div className="flex flex-1 items-center justify-end">
+          <CartDropdownBtn />
           <UserDropdown />
         </div>
       </div>
