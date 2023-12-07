@@ -1,7 +1,7 @@
 import { apiSlice } from '../api/api.slice';
 import { UserDetailsCacheTagsEnum } from '../user-details/user-details.tags';
 import { AuthCacheTagsEnum } from './auth.tags';
-import { LoginResponse, WhoResponse } from './types';
+import { LoginResponse, WhoResponse } from './auth.types';
 
 const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

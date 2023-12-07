@@ -8,7 +8,8 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import { deleteCredentials, setAccessToken } from '../auth/auth.slice';
 import { authCacheTags } from '../auth/auth.tags';
-import { RefreshResponse } from '../auth/types';
+import { RefreshResponse } from '../auth/auth.types';
+import { productCacheTags } from '../product/products.tags';
 import { productsCacheTags } from '../products/products.tags';
 import { RootState } from '../store';
 import { userDetailsCacheTags } from '../user-details/user-details.tags';
@@ -85,7 +86,7 @@ const baseQueryWithReauth = async (
   return result;
 };
 
-const tags = [...authCacheTags, ...userDetailsCacheTags, ...productsCacheTags];
+const tags = [...authCacheTags, ...userDetailsCacheTags, ...productsCacheTags, ...productCacheTags];
 export type ApiTagType = (typeof tags)[number];
 
 export const apiSlice = createApi({
