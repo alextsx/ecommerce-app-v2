@@ -5,8 +5,7 @@ import { GetUserInfoFromAtPayload, Public } from 'src/common/decorators';
 import { GetUserInfoFromRtPayload } from 'src/common/decorators/get-userinfo-from-atpayload';
 import { RtGuard } from 'src/common/guards';
 import { Config } from 'src/config';
-import { AuthDto } from './dtos';
-import { LoginDto } from './dtos/auth.dto';
+import { LoginDto, RegistrationDto } from './dtos/auth.dto';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
 
@@ -26,7 +25,7 @@ export class AuthController {
   @Public()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
-  signupLocal(@Body() dto: AuthDto) {
+  signupLocal(@Body() dto: RegistrationDto) {
     return this.authService.signupLocal(dto);
   }
 

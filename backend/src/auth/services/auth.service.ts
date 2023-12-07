@@ -1,8 +1,7 @@
 import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InvalidRefreshTokenException } from 'src/common/exceptions/invalid-refreshtoken.exception';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from '../dtos';
-import { LoginDto } from '../dtos/auth.dto';
+import { LoginDto, RegistrationDto } from '../dtos/auth.dto';
 import { Tokens } from '../types';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
@@ -37,7 +36,7 @@ export class AuthService {
     return tokens;
   }
 
-  async signupLocal(dto: AuthDto) {
+  async signupLocal(dto: RegistrationDto) {
     const foundUser = await this.findUserByEmail(dto.email);
     if (foundUser) {
       throw new ConflictException('Email already exists');
@@ -48,7 +47,16 @@ export class AuthService {
     return this.prisma.user.create({
       data: {
         email: dto.email,
-        password: hash
+        password: hash,
+        UserDetails: {
+          create: {
+            firstName: dto.first_name,
+            lastName: dto.last_name
+          }
+        }
+      },
+      include: {
+        UserDetails: true
       }
     });
   }
