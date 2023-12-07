@@ -31,6 +31,8 @@ export class ProductsService {
     if (!featuredProducts.length) {
       return this.getFallbackProducts();
     }
+
+    return featuredProducts;
   }
 
   public async getNewArrivalsProducts(): Promise<Product[]> {
