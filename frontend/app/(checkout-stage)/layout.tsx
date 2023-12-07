@@ -45,7 +45,7 @@ export default function Component({ children }: PropsWithChildren) {
   const pathname = usePathname();
   return (
     <>
-      <div className="flex items-center justify-around max-w-4xl w-full gap-2 md:gap-4">
+      <div className="flex items-center justify-around max-w-4xl w-full gap-2 pb-10 md:gap-4">
         {headerItems.map(({ innerText, icon: Icon, pathname: headerItemPathname }, index) => {
           const isUnclickableElement = innerText === 'Payment' || innerText === 'Order Complete';
           const isActive = pathname === headerItems[index].pathname;
