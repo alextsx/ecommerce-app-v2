@@ -9,10 +9,11 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { CartItem } from '@/redux/cart/cart.types';
 
 type DataTableProps = {
-  columns: ColumnDef<any>[];
-  data: any[];
+  columns: ColumnDef<CartItem>[];
+  data: CartItem[];
 };
 
 export const CartTable = ({ columns, data }: DataTableProps) => {
@@ -22,7 +23,7 @@ export const CartTable = ({ columns, data }: DataTableProps) => {
     getCoreRowModel: getCoreRowModel()
   });
 
-  const totalPrice = data.reduce((total, item) => total + item.price * Math.random() * 10, 0);
+  const totalPrice = data.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="bg-background">
