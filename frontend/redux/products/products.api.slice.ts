@@ -17,6 +17,14 @@ const productsApiSlice = apiSlice.injectEndpoints({
     getBestSellersProducts: builder.query<Product[], void>({
       query: () => 'products/best-sellers',
       providesTags: [ProductsCacheTagsEnum.BEST_SELLERS]
+    }),
+
+    getProducts: builder.query<Product[], void>({
+      query: () => 'products',
+      transformResponse: (response: PaginationResponse<Product>) => {
+        return response.data;
+      },
+      providesTags: [ProductsCacheTagsEnum.PRODUCTS]
     })
   })
 });
@@ -24,5 +32,6 @@ const productsApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetBestSellersProductsQuery,
   useGetNewArrivalsProductsQuery,
-  useGetFeaturedProductsQuery
+  useGetFeaturedProductsQuery,
+  useGetProductsQuery
 } = productsApiSlice;
