@@ -12,6 +12,9 @@ export type WhoResponse = {
 export type LoginResponse = {
   access_token: string;
 };
+export type RefreshResponse = {
+  access_token: string;
+};
 
 //SLICE
 export type AuthState = {

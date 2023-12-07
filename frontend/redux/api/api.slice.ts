@@ -7,8 +7,11 @@ import {
   FetchBaseQueryMeta
 } from '@reduxjs/toolkit/query/react';
 import { deleteCredentials, setAccessToken } from '../auth/auth.slice';
+import { authCacheTags } from '../auth/auth.tags';
+import { RefreshResponse } from '../auth/types';
+import { productsCacheTags } from '../products/products.tags';
 import { RootState } from '../store';
-import { RefreshResponse } from './types';
+import { userDetailsCacheTags } from '../user-details/user-details.tags';
 
 const BACKEND_URL = process.env.BACKEND ?? 'http://localhost:3000';
 
@@ -82,9 +85,12 @@ const baseQueryWithReauth = async (
   return result;
 };
 
+const tags = [...authCacheTags, ...userDetailsCacheTags, ...productsCacheTags];
+export type ApiTagType = (typeof tags)[number];
+
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
-  tagTypes: ['auth-details', 'user-details']
+  tagTypes: tags
 });

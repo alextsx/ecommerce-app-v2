@@ -1,4 +1,6 @@
 import { apiSlice } from '../api/api.slice';
+import { UserDetailsCacheTagsEnum } from '../user-details/user-details.tags';
+import { AuthCacheTagsEnum } from './auth.tags';
 import { LoginResponse, WhoResponse } from './types';
 
 const authApiSlice = apiSlice.injectEndpoints({
@@ -9,14 +11,14 @@ const authApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: credentials
       }),
-      invalidatesTags: ['auth-details', 'user-details']
+      invalidatesTags: [AuthCacheTagsEnum.AUTH_DETAILS, UserDetailsCacheTagsEnum.USER_DETAILS]
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
         url: 'auth/logout',
         method: 'POST'
       }),
-      invalidatesTags: ['auth-details', 'user-details']
+      invalidatesTags: [AuthCacheTagsEnum.AUTH_DETAILS, UserDetailsCacheTagsEnum.USER_DETAILS]
     }),
     signup: builder.mutation({
       query: (credentials) => ({
@@ -27,7 +29,7 @@ const authApiSlice = apiSlice.injectEndpoints({
     }),
     who: builder.query<WhoResponse, void>({
       query: () => 'auth/who',
-      providesTags: ['auth-details']
+      providesTags: [AuthCacheTagsEnum.AUTH_DETAILS]
     }),
     refresh: builder.mutation({
       query: () => ({
