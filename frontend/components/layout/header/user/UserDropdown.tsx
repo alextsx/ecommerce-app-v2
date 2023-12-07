@@ -51,20 +51,21 @@ export function UserDropdown() {
 
   return isLoading ? (
     <Skeleton className="h-8 w-8 rounded-full" />
-  ) : isLoggedIn ? (
-    <DropdownMenu>
-      <UserDropdownBtn />
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <UserDropdownHeaderUser />
-        <UserDropdownContent labelGroups={labelGroupsUser} />
-      </DropdownMenuContent>
-    </DropdownMenu>
   ) : (
     <DropdownMenu>
       <UserDropdownBtn />
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <UserDropdownHeaderGuest />
-        <UserDropdownContent labelGroups={labelGroupsGuest} />
+        {isLoggedIn ? (
+          <>
+            <UserDropdownHeaderUser />
+            <UserDropdownContent labelGroups={labelGroupsUser} />
+          </>
+        ) : (
+          <>
+            <UserDropdownHeaderGuest />
+            <UserDropdownContent labelGroups={labelGroupsGuest} />
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
