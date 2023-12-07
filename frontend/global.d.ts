@@ -9,3 +9,13 @@ type ErrorResponseType = {
     error: string;
   };
 };
+
+type PaginationResponse<T> = {
+  data: T[];
+  meta: {
+    items_per_page: number;
+    currentPage: number;
+    first_page: number;
+    last_page: number;
+  };
+};
