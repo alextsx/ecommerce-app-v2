@@ -11,11 +11,12 @@ const authApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['auth-details', 'user-details']
     }),
-    logout: builder.mutation({
+    logout: builder.mutation<void, void>({
       query: () => ({
         url: 'auth/logout',
         method: 'POST'
-      })
+      }),
+      invalidatesTags: ['auth-details', 'user-details']
     }),
     signup: builder.mutation({
       query: (credentials) => ({

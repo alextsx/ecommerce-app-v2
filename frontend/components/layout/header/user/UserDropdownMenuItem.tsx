@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import Link from 'next/link';
 import { DropdownMenuItem, DropdownMenuShortcut } from '@/components/ui/dropdown-menu';
+import { useHandleLogout } from '@/hooks/useHandleLogout';
 
 type UserDropdownMenuItemProps = {
   label: string;
@@ -11,10 +12,7 @@ type UserDropdownMenuItemProps = {
 
 export const UserDropdownMenuItem = memo(
   ({ label, shortcut, ...rest }: UserDropdownMenuItemProps) => {
-    //TODO should be a hook later on
-    const handleLogout = () => {
-      console.log('logout');
-    };
+    const { handleLogout } = useHandleLogout();
 
     if ('href' in rest && typeof rest.href === 'string') {
       return (
