@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 
-export const cartTableData: Product[] = [
+export const cartTableData = [
   {
     id: '1',
     price: 999.99,
@@ -43,7 +43,7 @@ export const cartTableData: Product[] = [
   }
 ];
 
-export const cartTableColumns: ColumnDef<Product>[] = [
+export const cartTableColumns: ColumnDef<any>[] = [
   {
     accessorKey: 'product_name',
     header: 'Product Name',

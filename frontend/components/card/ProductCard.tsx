@@ -1,23 +1,16 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Product } from '@/redux/products/products.types';
 
-export function ProductCard() {
-  const product = {
-    name: 'Sample Product',
-    description: 'This is a sample product description.',
-    price: '$99.99'
-  };
-
-  const imageWidth = 320;
-  const imageHeight = 240;
-
+export function ProductCard({ product }: { product: Product }) {
   return (
     <div className="w-80 h-[400px] border-2 group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 relative">
       <div className="h-3/5 relative">
         <Image
           className="object-cover"
-          src={`https://loremflickr.com/${imageWidth}/${imageHeight}`}
+          src={product.productImages?.[0]}
           alt={product.name}
           layout="fill"
         />
@@ -27,15 +20,17 @@ export function ProductCard() {
           <h2 className="text-lg font-bold overflow-ellipsis overflow-hidden whitespace-nowrap hover:whitespace-normal cursor-default">
             {product.name}
           </h2>
-          <p className="text-sm">{product.price}</p>
+          <p className="text-sm">${product.price.toFixed(2)}</p>
           <Separator className="w-80 relative -left-4 mt-2" />
         </div>
-        <div className="relative top-1 transform w-full h-full">
-          <p className="absolute left-0 text-sm mt-2 text-left h-full group-hover:hidden hidden xl:inline">
-            {product.description}
+        <div className="overflow-hidden text-ellipsis relative top-1 transform max.w-full h-full">
+          <p className="absolute left-0 text-sm mt-2 h-full w-full text-left group-hover:hidden hidden xl:inline">
+            {product.description ?? 'No description'}
           </p>
-          <div className="absolute w-full h-full top-4 left-0 xl:opacity-0 opacity-100  justify-between flex-col group-hover:opacity-100 transition-opacity duration-200 xl:flex xl:justify-between xl:flex-row">
-            <Button variant="outline">View Product</Button>
+          <div className="absolute w-full h-full top-14 left-6   xl:top-4 xl:left-0 xl:opacity-0 opacity-100  justify-between flex-col group-hover:opacity-100 transition-opacity duration-200 xl:flex xl:justify-between xl:flex-row">
+            <Link href={`product/${product.slug}`}>
+              <Button variant="outline">View Product</Button>
+            </Link>
             <Button>Add to Cart</Button>
           </div>
         </div>

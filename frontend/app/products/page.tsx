@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ProductCard } from '@/components/card/ProductCard';
 import { IconStar } from '@/components/icon/IconStar';
 import { ProductsSortBySelector } from '@/components/page-specific/products/SortBySelector';
 
@@ -77,6 +76,7 @@ const ProductsListingPage = () => {
           </div>
         </aside>
         <div className="grid grid-cols-3 gap-y-10 gap-x-8 justify-center">
+          {/*           <ProductCard />
           <ProductCard />
           <ProductCard />
           <ProductCard />
@@ -88,8 +88,7 @@ const ProductsListingPage = () => {
           <ProductCard />
           <ProductCard />
           <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard /> */}
         </div>
       </div>
     </section>

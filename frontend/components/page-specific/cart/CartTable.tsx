@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/table';
 
 type DataTableProps = {
-  columns: ColumnDef<Product>[];
-  data: Product[];
+  columns: ColumnDef<any>[];
+  data: any[];
 };
 
 export const CartTable = ({ columns, data }: DataTableProps) => {
@@ -22,7 +22,7 @@ export const CartTable = ({ columns, data }: DataTableProps) => {
     getCoreRowModel: getCoreRowModel()
   });
 
-  const totalPrice = data.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = data.reduce((total, item) => total + item.price * Math.random() * 10, 0);
 
   return (
     <div className="bg-background">
