@@ -13,7 +13,7 @@ import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
 import { useLoginMutation } from '@/redux/auth/auth.api.slice';
 import { setAccessToken, setAuthDetails } from '@/redux/auth/auth.slice';
-import { ROLES } from '@/redux/auth/types';
+import { ROLES } from '@/redux/auth/auth.types';
 import { loginSchema } from '@/schemas/auth.schema';
 import { SubmitBtn } from '../button/SubmitBtn';
 
