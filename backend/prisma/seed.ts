@@ -55,9 +55,14 @@ const seedProductsAndRelated = async () => {
       const randomCategoryId = await getRandomId(prisma.category);
       const productName = faker.commerce.productName();
       const slug = faker.helpers.slugify(productName) + '-' + faker.string.uuid().slice(0, 4);
+      const price = faker.number.float({ min: 5, max: 50 });
+      const discountedPrice = faker.datatype.boolean()
+        ? faker.number.float({ min: price * 0.5, max: price * 0.9 })
+        : null;
       return {
         name: productName,
-        price: faker.number.float({ min: 0.5, max: 100 }),
+        price,
+        discountedPrice,
         inventory: faker.number.int({ min: 5, max: 100 }),
         category: { connect: { id: randomCategoryId } },
         isFeatured: faker.datatype.boolean(),
