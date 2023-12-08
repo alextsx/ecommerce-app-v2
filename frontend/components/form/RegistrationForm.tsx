@@ -7,7 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
+import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { cn } from '@/lib/shadcn-utils';
+import { useSignupMutation } from '@/redux/auth/auth.api.slice';
+import { registerSchema } from '@/schemas/auth.schema';
 import { SubmitBtn } from '../button/SubmitBtn';
 
 type RegistrationFormProps = HTMLAttributes<HTMLFormElement>;
@@ -30,9 +33,7 @@ const initialValues: RegistrationFormValuesType = {
 export const RegistrationForm = ({ className, ...props }: RegistrationFormProps) => {
   const router = useRouter();
 
-  //dummy register
-  const register = (props: any): any => {};
-  const isLoading = false;
+  const [register, { isLoading }] = useSignupMutation();
 
   //notifications
   const { visible, show, hide, AlertBoxComponent } = useAlertBox();
@@ -47,13 +48,13 @@ export const RegistrationForm = ({ className, ...props }: RegistrationFormProps)
         title: 'Successfully registered!',
         description: 'You can now login to your account.',
         variant: 'default'
-        //should be constructive
+        //TODO should be constructive
       });
       router.push('/login');
     } catch (err: any) {
-      /*       const message = parseErrorMessage(err); */
+      const message = parseErrorResponse(err);
       show({
-        message: err?.message,
+        message,
         title: 'Error',
         variant: 'destructive'
       });
@@ -62,8 +63,8 @@ export const RegistrationForm = ({ className, ...props }: RegistrationFormProps)
 
   const formik = useFormik({
     initialValues,
-    onSubmit
-    /*     validationSchema: registerSchema */
+    onSubmit,
+    validationSchema: registerSchema
   });
 
   const { handleSubmit, errors, values, handleChange, isValid, touched } = formik;
