@@ -11,7 +11,7 @@ import {
 import { ProductCard } from '@/components/card/ProductCard';
 import SectionSeparator from '@/components/SectionSeparator';
 import { ApiTagType } from '@/redux/api/api.slice';
-import { Product } from '@/redux/products/products.types';
+import { Product } from '@/redux/product/product.types';
 
 export const ProductShowcaseSection = ({
   useQueryHook,

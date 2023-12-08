@@ -9,7 +9,7 @@ import {
 import { deleteCredentials, setAccessToken } from '../auth/auth.slice';
 import { authCacheTags } from '../auth/auth.tags';
 import { RefreshResponse } from '../auth/auth.types';
-import { productCacheTags } from '../product/products.tags';
+import { productCacheTags } from '../product/product.tags';
 import { productsCacheTags } from '../products/products.tags';
 import { RootState } from '../store';
 import { userDetailsCacheTags } from '../user-details/user-details.tags';

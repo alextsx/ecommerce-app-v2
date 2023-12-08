@@ -55,7 +55,7 @@ export const ProductContent = ({ slug }: { slug: string }) => {
         <div>
           <div className="flex justify-between items-start">
             <h1 className="font-bold text-3xl">{product.name}</h1>
-            <div className="text-5xl font-bold">${product.price?.toFixed(2)}</div>
+            <div className="text-5xl font-bold">{product.formattedPrice}</div>
           </div>
           <div className="flex flex-col items-start justify-center gap-4">
             <div className="flex items-center gap-0.5">

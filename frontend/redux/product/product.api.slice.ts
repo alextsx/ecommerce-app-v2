@@ -1,6 +1,6 @@
 import { apiSlice } from '../api/api.slice';
+import { ProductCacheTagsEnum } from './product.tags';
 import { DetailedProduct } from './product.types';
-import { ProductCacheTagsEnum } from './products.tags';
 
 const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

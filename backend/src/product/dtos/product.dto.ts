@@ -30,8 +30,6 @@ class BaseProductDto implements Partial<Product> {
 
   @Transform(({ value }: { value: ProductImage[] }) => value.map((image) => image.url))
   productImages: string[];
-  @Transform(({ value }: { value: Category }) => value.name)
-  category: string;
   @Exclude()
   categoryId: string;
 
@@ -44,6 +42,8 @@ class BaseProductDto implements Partial<Product> {
 
 export class ProductDto extends BaseProductDto {
   rating: number;
+  @Transform(({ value }: { value: Category }) => value.name)
+  category: string;
 }
 
 export class ProductCardDto extends BaseProductDto {}

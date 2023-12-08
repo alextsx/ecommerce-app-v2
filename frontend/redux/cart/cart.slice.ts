@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '../products/products.types';
+import { Product } from '../product/product.types';
 import { RootState } from '../store';
 import { CartItem, CartState } from './cart.types';
 
@@ -15,8 +15,7 @@ const reducers = {
       slug: item.slug,
       name: item.name,
       imageUrl: item.productImages?.[0],
-      //TODO: fix price
-      price: Number(item.price.toFixed(2)),
+      price: item.price,
       quantity: 1
     };
     const existingItem = state.find((i) => i.slug === item.slug);

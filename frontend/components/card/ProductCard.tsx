@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { addToCart } from '@/redux/cart/cart.slice';
-import { Product } from '@/redux/products/products.types';
+import { Product } from '@/redux/product/product.types';
 
 export function ProductCard({ product }: { product: Product }) {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
           <h2 className="text-lg font-bold overflow-ellipsis overflow-hidden whitespace-nowrap hover:whitespace-normal cursor-default">
             {product.name}
           </h2>
-          <p className="text-sm">${product.price.toFixed(2)}</p>
+          <p className="text-sm">{product.formattedPrice}</p>
           <Separator className="w-80 relative -left-4 mt-2" />
         </div>
         <div className="overflow-hidden text-ellipsis relative top-1 transform max.w-full h-full">

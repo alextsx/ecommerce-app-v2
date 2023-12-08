@@ -1,7 +1,19 @@
-import { Product } from '../products/products.types';
+export type Product = {
+  name: string;
+  slug: string;
+
+  price: number;
+  discountedPrice: number | null;
+  formattedPrice: string;
+  discountedPriceFormatted?: string;
+
+  productImages: string[];
+  rating: number;
+  description: string;
+  inventory: number;
+};
 
 export type DetailedProduct = Product & {
-  inventory: number;
-  isFeatured: boolean;
   category: string;
+  rating: number;
 };
