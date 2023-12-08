@@ -9,7 +9,9 @@ export class TransformDataInterceptor<T> implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler) {
     return next.handle().pipe(
       map((data) => {
-        return plainToInstance(this.classToUse, data);
+        const newInstance = plainToInstance(this.classToUse, data);
+        console.log(newInstance);
+        return newInstance;
       })
     );
   }
