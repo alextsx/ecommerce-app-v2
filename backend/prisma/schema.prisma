@@ -113,10 +113,11 @@ model Product {
   id   String @id @default(uuid())
   slug String @unique
 
-  name        String
-  price       Float
-  description String?
-  inventory   Int     @default(0)
+  name            String
+  price           Float
+  discountedPrice Float?
+  description     String?
+  inventory       Int     @default(0)
 
   isFeatured Boolean @default(false)
 
