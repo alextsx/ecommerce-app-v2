@@ -1,10 +1,15 @@
+import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useToggleToast } from '@/hooks/useToggleToast';
+import { addToCart } from '@/redux/cart/cart.slice';
 import { Product } from '@/redux/products/products.types';
 
 export function ProductCard({ product }: { product: Product }) {
+  const dispatch = useDispatch();
+  const toast = useToggleToast();
   return (
     <div className="w-80 h-[400px] border-2 group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 relative">
       <div className="h-3/5 relative">
@@ -31,7 +36,19 @@ export function ProductCard({ product }: { product: Product }) {
             <Link href={`product/${product.slug}`}>
               <Button variant="outline">View Product</Button>
             </Link>
-            <Button>Add to Cart</Button>
+            {/*TODO CUSTOMHOOK */}
+            <Button
+              onClick={() => {
+                dispatch(addToCart(product));
+                toast({
+                  title: 'Success',
+                  description: `${product.name} added to cart`,
+                  variant: 'default'
+                });
+              }}
+            >
+              Add to Cart
+            </Button>
           </div>
         </div>
       </div>
