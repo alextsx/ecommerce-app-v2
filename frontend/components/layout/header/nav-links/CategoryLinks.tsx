@@ -16,7 +16,6 @@ import { NavLink } from './NavLink';
 export const CategoryLinks = () => {
   const { data: categories, isLoading } = useGetCategoriesQuery();
   const pathName = usePathname();
-  console.log(pathName);
   const isActive = pathName.startsWith('/products');
   return (
     <DropdownMenu>
@@ -35,7 +34,7 @@ export const CategoryLinks = () => {
         <div className="grid grid-flow-col grid-rows-6 gap-4 p-2">
           {categories?.map((category) => (
             <DropdownMenuItem className="px-2" key={category.slug}>
-              <NavLink label={category.name} href={`/products/${category.slug}`} />
+              <NavLink label={category.name} href={`/products?category=${category.slug}`} />
             </DropdownMenuItem>
           ))}
         </div>
