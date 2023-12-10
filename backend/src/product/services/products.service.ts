@@ -137,6 +137,8 @@ export class ProductsService {
       }
     };
 
+    const uniqueFilters = ['category', 'rating'];
+
     if (filterDto.category) {
       where['category'] = { name: filterDto.category };
       include['category'] = {
@@ -146,7 +148,17 @@ export class ProductsService {
       };
     }
 
-    const filters = Object.keys(filterDto).filter((key) => key !== 'category');
+    if (filterDto.rating) {
+      //minimum rating, gte
+      where['rating'] = {
+        gte: filterDto.rating
+      };
+    }
+
+    const filters = Object.keys(filterDto).filter(
+      (filter) => !uniqueFilters.includes(filter) && filterDto[filter]
+    );
+
     filters.forEach((filter) => {
       where[filter] = {
         contains: filterDto[filter],
@@ -156,7 +168,7 @@ export class ProductsService {
 
     const orderBy = {};
     if (sortDto.sort) {
-      const [column, order] = sortDto.sort.split('-');
+      const [column, order] = sortDto.sort.split('_');
       orderBy[column as ProductSortableOrders] = order;
     }
 
