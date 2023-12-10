@@ -10,7 +10,6 @@ export class TransformDataInterceptor<T> implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         const newInstance = plainToInstance(this.classToUse, data);
-        console.log(newInstance);
         return newInstance;
       })
     );
