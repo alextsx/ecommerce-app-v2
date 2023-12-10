@@ -9,6 +9,7 @@ import {
 import { deleteCredentials, setAccessToken } from '../auth/auth.slice';
 import { authCacheTags } from '../auth/auth.tags';
 import { RefreshResponse } from '../auth/auth.types';
+import { categoriesCacheTags } from '../categories/categories.tags';
 import { productCacheTags } from '../product/product.tags';
 import { productsCacheTags } from '../products/products.tags';
 import { RootState } from '../store';
@@ -86,7 +87,13 @@ const baseQueryWithReauth = async (
   return result;
 };
 
-const tags = [...authCacheTags, ...userDetailsCacheTags, ...productsCacheTags, ...productCacheTags];
+const tags = [
+  ...authCacheTags,
+  ...userDetailsCacheTags,
+  ...productsCacheTags,
+  ...productCacheTags,
+  ...categoriesCacheTags
+];
 export type ApiTagType = (typeof tags)[number];
 
 export const apiSlice = createApi({
