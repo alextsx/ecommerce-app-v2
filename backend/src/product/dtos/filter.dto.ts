@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsOptional, Max, Min } from 'class-validator';
 
 export class FilterDto {
@@ -9,5 +10,6 @@ export class FilterDto {
   @Min(1)
   @Max(5)
   @IsOptional()
+  @Transform(({ value }) => Number(value))
   rating?: number;
 }
