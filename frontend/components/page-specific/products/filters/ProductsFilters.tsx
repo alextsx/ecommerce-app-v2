@@ -1,7 +1,7 @@
 import { CategoryFilter } from './CategoryFilter';
 import { NameFilter } from './NameFilter';
 import { PriceFilter } from './PriceFilter';
-import { ReviewsFilter } from './ReviewsFilter';
+import { RatingFilter } from './RatingFilter';
 
 export const ProductsFilters = () => {
   return (
@@ -9,7 +9,7 @@ export const ProductsFilters = () => {
       <NameFilter />
       <CategoryFilter />
       <PriceFilter />
-      <ReviewsFilter />
+      <RatingFilter />
     </aside>
   );
 };
