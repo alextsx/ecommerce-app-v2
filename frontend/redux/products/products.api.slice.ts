@@ -1,3 +1,5 @@
+import { ReadonlyURLSearchParams } from 'next/navigation';
+import { parseProductsSearchParams } from '@/lib/parseProductsSearchParams';
 import { apiSlice } from '../api/api.slice';
 import { Product } from '../product/product.types';
 import { ProductsCacheTagsEnum } from './products.tags';
@@ -20,8 +22,13 @@ const productsApiSlice = apiSlice.injectEndpoints({
       providesTags: [ProductsCacheTagsEnum.BEST_SELLERS]
     }),
 
-    getProducts: builder.query<Product[], void>({
-      query: () => 'products',
+    getProducts: builder.query<Product[], Record<string, string>>({
+      query: (params) => {
+        return {
+          url: 'products',
+          params
+        };
+      },
       transformResponse: (response: PaginationResponse<Product>) => {
         return response.data;
       },
