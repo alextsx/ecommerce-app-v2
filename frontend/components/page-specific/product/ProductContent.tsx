@@ -68,7 +68,7 @@ export const ProductContent = ({ slug }: { slug: string }) => {
           </div>
           <div className="flex flex-col items-start justify-center gap-4">
             <div className="flex items-center gap-0.5">
-              <ProductRating rating={product.rating} />({product.rating})
+              <ProductRating rating={product.rating} />({product.rating.toFixed(2)})
             </div>
             <Badge className="w-auto h-auto text-md">{product.category}</Badge>
           </div>
