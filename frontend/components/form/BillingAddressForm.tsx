@@ -49,6 +49,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
             name="billing-line1"
             placeholder="Line 1"
             error={touched['billing-line1'] && errors['billing-line1']}
+            disabled={disabled}
           />
         </div>
         <div>
@@ -58,6 +59,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
             name="billing-line2"
             placeholder="Line 2"
             error={touched['billing-line2'] && errors['billing-line2']}
+            disabled={disabled}
           />
         </div>
         <div>
@@ -67,6 +69,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
             name="billing-city"
             placeholder="City"
             error={touched['billing-city'] && errors['billing-city']}
+            disabled={disabled}
           />
         </div>
         <div>
@@ -76,6 +79,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
             name="billing-state"
             placeholder="State"
             error={touched['billing-state'] && errors['billing-state']}
+            disabled={disabled}
           />
         </div>
         <div>
@@ -85,6 +89,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
             name="billing-country"
             placeholder="Country"
             error={touched['billing-country'] && errors['billing-country']}
+            disabled={disabled}
           />
         </div>
         <div>
@@ -94,6 +99,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
             name="billing-zipcode"
             placeholder="ZIP Code"
             error={touched['billing-zipcode'] && errors['billing-zipcode']}
+            disabled={disabled}
           />
         </div>
       </CardContent>
