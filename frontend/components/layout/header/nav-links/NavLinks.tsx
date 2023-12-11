@@ -3,6 +3,7 @@ import { NavLink } from './NavLink';
 
 const links = [
   { label: 'Home', href: '/' },
+  { label: 'Shop', href: '/products' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' }
 ];

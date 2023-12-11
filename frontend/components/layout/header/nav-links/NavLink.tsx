@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/shadcn-utils';
 
 type NavLinkProps = {
@@ -11,7 +11,8 @@ type NavLinkProps = {
 
 export const NavLink = ({ label, href }: NavLinkProps) => {
   const pathName = usePathname();
-  const isActive = pathName === href;
+  const searchParams = useSearchParams();
+  const isActive = pathName === href && searchParams.toString() === '';
   return (
     <Link
       className={cn(

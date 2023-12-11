@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,8 @@ import { NavLink } from './NavLink';
 export const CategoryLinks = () => {
   const { data: categories, isLoading } = useGetCategoriesQuery();
   const pathName = usePathname();
-  const isActive = pathName.startsWith('/products');
+  const searchParams = useSearchParams();
+  const isActive = pathName.startsWith('/products') && searchParams.get('category') !== null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -26,11 +27,9 @@ export const CategoryLinks = () => {
             : 'hover:text-foreground/80 text-foreground/40'
         )}
       >
-        Shop
+        Categories
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel className="text-center">Categories</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <div className="grid grid-flow-col grid-rows-6 gap-4 p-2">
           {categories?.map((category) => (
             <DropdownMenuItem className="px-2" key={category.slug}>
