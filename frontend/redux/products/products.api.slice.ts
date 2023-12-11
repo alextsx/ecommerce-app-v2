@@ -1,6 +1,7 @@
 import { apiSlice } from '../api/api.slice';
 import { Product } from '../product/product.types';
 import { ProductsCacheTagsEnum } from './products.tags';
+import { PriceRange } from './products.types';
 
 const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -25,6 +26,11 @@ const productsApiSlice = apiSlice.injectEndpoints({
         return response.data;
       },
       providesTags: [ProductsCacheTagsEnum.PRODUCTS]
+    }),
+
+    getPriceRange: builder.query<PriceRange, void>({
+      query: () => 'products/price-range',
+      providesTags: [ProductsCacheTagsEnum.PRICE_RANGE]
     })
   })
 });
@@ -33,5 +39,6 @@ export const {
   useGetBestSellersProductsQuery,
   useGetNewArrivalsProductsQuery,
   useGetFeaturedProductsQuery,
-  useGetProductsQuery
+  useGetProductsQuery,
+  useGetPriceRangeQuery
 } = productsApiSlice;
