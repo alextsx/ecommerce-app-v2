@@ -1,5 +1,6 @@
 'use client';
 
+import { useSelector } from 'react-redux';
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import {
   Table,
@@ -9,6 +10,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { selectCartTotal } from '@/redux/cart/cart.slice';
 import { CartItem } from '@/redux/cart/cart.types';
 
 type DataTableProps = {
@@ -23,7 +25,7 @@ export const CartTable = ({ columns, data }: DataTableProps) => {
     getCoreRowModel: getCoreRowModel()
   });
 
-  const totalPrice = data.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = useSelector(selectCartTotal);
 
   return (
     <div className="bg-background">

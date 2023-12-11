@@ -34,44 +34,50 @@ export const cartTableColumns: ColumnDef<CartItem>[] = [
     accessorKey: 'price',
     header: 'Price',
     cell: ({ row }) => {
+      if (!row.original.discountedPrice) {
+        return (
+          <div className="flex justify-center items-center flex-col">
+            <div className="text-sm text-gray-900 dark:text-gray-100">
+              {row.original.formattedPrice}
+            </div>
+          </div>
+        );
+      }
       return (
         <div className="flex justify-center items-center flex-col">
-          <div className="text-sm text-gray-900 dark:text-gray-100">{row.original.price}$</div>
-        </div>
-      );
-      /*       return (
-        <div className="flex justify-center items-center flex-col">
           <div className="text-sm text-gray-900 line-through dark:text-gray-100">
-            {row.original.price}$
+            {row.original.formattedPrice}
           </div>
           <div className="text-sm text-red-600 dark:text-red-400">
-            {row.original.discounted_price}$
+            {row.original.discountedPriceFormatted}
           </div>
         </div>
-      ); */
+      );
     }
   },
   {
     header: 'Total',
     cell: ({ row }) => {
+      if (!row.original.discountedPrice) {
+        return (
+          <div className="flex justify-center items-center flex-col">
+            <div className="text-sm text-gray-900 dark:text-gray-100">
+              ${(row.original.price * row.original.quantity).toFixed(2)}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="flex justify-center items-center flex-col">
-          <div className="text-sm text-gray-900 dark:text-gray-100">
-            {row.original.price * row.original.quantity}$
+          <div className="text-sm text-gray-900 line-through dark:text-gray-100">
+            ${(row.original.price * row.original.quantity).toFixed(2)}
+          </div>
+          <div className="text-sm text-red-600 dark:text-red-400">
+            {(row.original.discountedPrice * row.original.quantity).toFixed(2)}$
           </div>
         </div>
       );
-
-      /*       return (
-        <div className="flex justify-center items-center flex-col">
-          <div className="text-sm text-gray-900 line-through dark:text-gray-100">
-            {row.original.price * row.original.quantity}$
-          </div>
-          <div className="text-sm text-red-600 dark:text-red-400">
-            {row.original.discounted_price * row.original.quantity}$
-          </div>
-        </div>
-      ); */
     }
   }
 ];
