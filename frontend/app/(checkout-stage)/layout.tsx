@@ -1,6 +1,7 @@
 'use client';
 
 import { PropsWithChildren } from 'react';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IconCheckcircle } from '@/components/icon/IconCheckcircle';
@@ -8,6 +9,7 @@ import { IconChevronright } from '@/components/icon/IconChevronright';
 import { IconCreditcard } from '@/components/icon/IconCreditcard';
 import { IconMoneybillwave } from '@/components/icon/IconMoneybillwave';
 import { IconShoppingcart } from '@/components/icon/IconShoppingcart';
+import { selectCart } from '@/redux/cart/cart.slice';
 
 const headerItems = [
   {
@@ -43,13 +45,15 @@ const disabledHeaderItemTextStyle = 'text-gray-300';
 
 export default function Component({ children }: PropsWithChildren) {
   const pathname = usePathname();
+  const cart = useSelector(selectCart);
   return (
     <>
       <div className="flex items-center justify-around max-w-4xl w-full gap-2 pb-10 md:gap-4">
         {headerItems.map(({ innerText, icon: Icon, pathname: headerItemPathname }, index) => {
           const isUnclickableElement = innerText === 'Payment' || innerText === 'Order Complete';
           const isActive = pathname === headerItems[index].pathname;
-          const isDisabled = isActive || isUnclickableElement;
+          const isCheckoutWithEmptyCart = innerText === 'Checkout' && !cart.length;
+          const isDisabled = isActive || isUnclickableElement || isCheckoutWithEmptyCart;
 
           const textStyle = isActive
             ? activeHeaderItemTextStyle
