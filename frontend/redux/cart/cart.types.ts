@@ -1,8 +1,7 @@
-export type CartItem = {
-  slug: string;
-  name: string;
+import { Product } from '../product/product.types';
+
+export type CartItem = Product & {
   imageUrl: string;
-  price: number;
   quantity: number;
 };
 

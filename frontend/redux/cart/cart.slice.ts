@@ -12,10 +12,8 @@ const reducers = {
   addToCart: (state: CartState, action: PayloadAction<Product>) => {
     const item = action.payload;
     const newCartItem: CartItem = {
-      slug: item.slug,
-      name: item.name,
+      ...item,
       imageUrl: item.productImages?.[0],
-      price: item.price,
       quantity: 1
     };
     const existingItem = state.find((i) => i.slug === item.slug);
@@ -56,6 +54,12 @@ const cartSlice = createSlice({
 
 //selectors
 export const selectCart = (state: RootState) => state.cart;
+export const selectCartTotal = (state: RootState) => {
+  return state.cart.reduce(
+    (acc, item) => acc + (item.discountedPrice ?? item.price) * item.quantity,
+    0
+  );
+};
 
 //actions
 export const { emptyCart, addToCart, decreaseQuantity, increaseQuantity } = cartSlice.actions;
