@@ -25,7 +25,14 @@ export function ProductCard({ product }: { product: Product }) {
           <h2 className="text-lg font-bold overflow-ellipsis overflow-hidden whitespace-nowrap hover:whitespace-normal cursor-default">
             {product.name}
           </h2>
-          <p className="text-sm">{product.formattedPrice}</p>
+          {product.discountedPriceFormatted ? (
+            <div className="flex text-muted-foreground flex-row gap-8">
+              <p className="line-through text-lg">{product.formattedPrice}</p>
+              <p className="text-green-700 font-bold text-xl">{product.discountedPriceFormatted}</p>
+            </div>
+          ) : (
+            <p className="text-lg">{product.formattedPrice}</p>
+          )}
           <Separator className="w-80 relative -left-4 mt-2" />
         </div>
         <div className="overflow-hidden text-ellipsis relative top-1 transform max.w-full h-full">
