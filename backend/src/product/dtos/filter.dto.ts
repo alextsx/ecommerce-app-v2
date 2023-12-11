@@ -6,6 +6,12 @@ export class FilterDto {
   category?: string;
   @IsOptional()
   name?: string;
+  @IsOptional()
+  @Transform(({ value }) => Number(value))
+  minPrice?: number;
+  @IsOptional()
+  @Transform(({ value }) => Number(value))
+  maxPrice?: number;
 
   @Min(1)
   @Max(5)

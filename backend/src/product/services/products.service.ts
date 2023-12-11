@@ -137,10 +137,10 @@ export class ProductsService {
       }
     };
 
-    const uniqueFilters = ['category', 'rating'];
+    const uniqueFilters = ['category', 'rating', 'minPrice', 'maxPrice'];
 
     if (filterDto.category) {
-      where['category'] = { name: filterDto.category };
+      where['category'] = { slug: { equals: filterDto.category, mode: 'insensitive' } };
       include['category'] = {
         select: {
           name: true
@@ -153,6 +153,36 @@ export class ProductsService {
       where['rating'] = {
         gte: filterDto.rating
       };
+    }
+
+    if (filterDto.minPrice) {
+      where['OR'] = [
+        ...(where['OR'] || []),
+        {
+          AND: [
+            { discountedPrice: { not: null } },
+            { discountedPrice: { gte: filterDto.minPrice } }
+          ]
+        },
+        {
+          AND: [{ discountedPrice: null }, { price: { gte: filterDto.minPrice } }]
+        }
+      ];
+    }
+
+    if (filterDto.maxPrice) {
+      where['OR'] = [
+        ...(where['OR'] || []),
+        {
+          AND: [
+            { discountedPrice: { not: null } },
+            { discountedPrice: { lte: filterDto.maxPrice } }
+          ]
+        },
+        {
+          AND: [{ discountedPrice: null }, { price: { lte: filterDto.maxPrice } }]
+        }
+      ];
     }
 
     const filters = Object.keys(filterDto).filter(
@@ -177,6 +207,16 @@ export class ProductsService {
 
     const total = await this.prismaService.product.count({ where });
     const last_page = Math.ceil(total / limit);
+
+    const findManyOptions = {
+      where,
+      include,
+      orderBy,
+      skip,
+      take: limit
+    };
+
+    console.log(findManyOptions);
 
     const products = await this.prismaService.product.findMany({
       where,
