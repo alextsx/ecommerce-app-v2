@@ -1,14 +1,13 @@
 'use client';
 
 import { ChangeEvent, useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useDebouncedCallback } from 'use-debounce';
+import { useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
+import { useUpdateURL } from '@/hooks/useUpdateURL';
 
 export const NameFilter = () => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
+  const { updateURL } = useUpdateURL();
 
   // Get the current 'name' search parameter
   const initialName = searchParams.get('name') || '';
@@ -18,15 +17,8 @@ export const NameFilter = () => {
     setName(event.target.value);
   };
 
-  const updateURL = useDebouncedCallback(() => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set('name', name);
-    router.push(`${pathname}?${newSearchParams.toString()}`);
-  }, 300);
-
-  // Call updateURL whenever name changes
   useEffect(() => {
-    updateURL();
+    updateURL('name', name);
   }, [name, updateURL]);
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,24 +12,31 @@ import {
   CommandItem
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useUpdateURL } from '@/hooks/useUpdateURL';
 import { cn } from '@/lib/shadcn-utils';
 import { useGetCategoriesQuery } from '@/redux/categories/categories.api.slice';
 
 export const CategoryFilter = () => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
   const selectedCategory = searchParams.get('category');
-  const router = useRouter();
+  const { updateURL } = useUpdateURL();
 
   const { data: categories, isLoading } = useGetCategoriesQuery();
   const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState(selectedCategory);
 
   const onCategorySelect = (categorySlug: string) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set('category', categorySlug);
-    router.push(`${pathname}?${newSearchParams.toString()}`);
+    if (categorySlug === category) {
+      setCategory(null);
+    } else {
+      setCategory(categorySlug);
+    }
     setOpen(false);
   };
+
+  useEffect(() => {
+    updateURL('category', category);
+  }, [category, updateURL]);
 
   return (
     <div>
