@@ -25,5 +25,54 @@ export const errorLabels = {
       required: 'Password confirmation is required',
       matches: 'Passwords must match'
     }
+  },
+  checkout: {
+    address: {
+      line1: {
+        required: 'Address is required',
+        max: 'Address must be less than 255 characters'
+      },
+      line2: {
+        max: 'Address must be less than 255 characters'
+      },
+      city: {
+        required: 'City is required',
+        max: 'City must be less than 255 characters'
+      },
+      state: {
+        required: 'State is required',
+        max: 'State must be less than 255 characters'
+      },
+      country: {
+        required: 'Country is required',
+        max: 'Country must be less than 255 characters'
+      },
+      zipcode: {
+        required: 'Zip is required',
+        max: 'Zip must be less than 255 characters'
+      }
+    },
+    customer: {
+      firstName: {
+        required: 'First name is required',
+        max: 'First name must be less than 255 characters'
+      },
+      lastName: {
+        required: 'Last name is required',
+        max: 'Last name must be less than 255 characters'
+      },
+      email: {
+        required: 'Email is required',
+        email: 'Email is not valid'
+      },
+      phone: {
+        required: 'Phone is required',
+        max: 'Phone must be less than 255 characters'
+      }
+    },
+    paymentMethod: {
+      required: 'Payment method is required',
+      oneOf: 'Payment method must be one of the following values: stripe, cod'
+    }
   }
 };
