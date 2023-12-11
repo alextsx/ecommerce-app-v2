@@ -155,32 +155,21 @@ export class ProductsService {
       };
     }
 
-    if (filterDto.minPrice) {
+    if (filterDto.minPrice || filterDto.maxPrice) {
       where['OR'] = [
-        ...(where['OR'] || []),
         {
           AND: [
             { discountedPrice: { not: null } },
-            { discountedPrice: { gte: filterDto.minPrice } }
+            filterDto.minPrice ? { discountedPrice: { gte: filterDto.minPrice } } : {},
+            filterDto.maxPrice ? { discountedPrice: { lte: filterDto.maxPrice } } : {}
           ]
         },
-        {
-          AND: [{ discountedPrice: null }, { price: { gte: filterDto.minPrice } }]
-        }
-      ];
-    }
-
-    if (filterDto.maxPrice) {
-      where['OR'] = [
-        ...(where['OR'] || []),
         {
           AND: [
-            { discountedPrice: { not: null } },
-            { discountedPrice: { lte: filterDto.maxPrice } }
+            { discountedPrice: null },
+            filterDto.minPrice ? { price: { gte: filterDto.minPrice } } : {},
+            filterDto.maxPrice ? { price: { lte: filterDto.maxPrice } } : {}
           ]
-        },
-        {
-          AND: [{ discountedPrice: null }, { price: { lte: filterDto.maxPrice } }]
         }
       ];
     }
@@ -216,7 +205,7 @@ export class ProductsService {
       take: limit
     };
 
-    console.log(findManyOptions);
+    console.log(JSON.stringify(findManyOptions, null, 2));
 
     const products = await this.prismaService.product.findMany({
       where,
