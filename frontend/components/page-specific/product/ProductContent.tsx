@@ -82,7 +82,7 @@ export const ProductContent = ({ slug }: { slug: string }) => {
             toast({
               title: 'Success',
               description: `${product.name} added to cart`,
-              variant: 'default'
+              variant: 'constructive'
             });
           }}
         >

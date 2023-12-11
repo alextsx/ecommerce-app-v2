@@ -92,8 +92,8 @@ const CheckoutPage = () => {
     try {
       toggleToast({
         title: 'Success',
-        description: 'You are now logged in!',
-        variant: 'default'
+        description: 'Order successfully placed!',
+        variant: 'constructive'
       });
 
       router.push('/');

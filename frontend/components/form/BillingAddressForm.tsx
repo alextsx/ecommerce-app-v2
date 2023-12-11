@@ -23,6 +23,7 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
       setFieldValue('billingAddress.billing-zipcode', values.shippingAddress['shipping-zipcode']);
     }
   };
+  //todo if same as shipping then values of them should be shippingAddress ...
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between items-center">

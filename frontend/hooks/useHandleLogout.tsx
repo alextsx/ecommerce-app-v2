@@ -17,7 +17,7 @@ export const useHandleLogout = () => {
       toggleToast({
         description: 'You successfully logged out.',
         title: 'Successful logout',
-        variant: 'default'
+        variant: 'constructive'
       });
     } catch (err) {
       const message = parseErrorResponse(err);

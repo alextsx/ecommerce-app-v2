@@ -2,7 +2,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export type AlertBoxProps = {
-  variant: Variant;
+  variant: Exclude<Variant, 'constructive'>;
   title: string;
   message: string | string[];
 };

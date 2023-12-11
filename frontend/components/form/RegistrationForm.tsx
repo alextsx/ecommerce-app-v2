@@ -47,8 +47,7 @@ export const RegistrationForm = ({ className, ...props }: RegistrationFormProps)
       toggleToast({
         title: 'Successfully registered!',
         description: 'You can now login to your account.',
-        variant: 'default'
-        //TODO should be constructive
+        variant: 'constructive'
       });
       router.push('/login');
     } catch (err: any) {

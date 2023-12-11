@@ -50,7 +50,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
       toggleToast({
         title: 'Success',
         description: 'You are now logged in!',
-        variant: 'default'
+        variant: 'constructive'
       });
 
       router.push('/');

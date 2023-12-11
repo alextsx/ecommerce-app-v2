@@ -1,4 +1,4 @@
-type Variant = 'destructive' | 'default';
+type Variant = 'destructive' | 'default' | 'constructive';
 
 //typical nestjs error response
 type ErrorResponseType = {

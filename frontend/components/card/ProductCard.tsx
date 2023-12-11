@@ -50,7 +50,7 @@ export function ProductCard({ product }: { product: Product }) {
                 toast({
                   title: 'Success',
                   description: `${product.name} added to cart`,
-                  variant: 'default'
+                  variant: 'constructive'
                 });
               }}
             >
