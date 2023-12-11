@@ -7,20 +7,20 @@ import { Separator } from '../ui/separator';
 
 export const BillingAddressForm = ({ formik }: { formik: any }) => {
   const { touched, errors, values, setFieldValue } = formik;
-  const disabled = values['billing-same-as-shipping'];
+  const disabled = values.billingAddress?.['billing-same-as-shipping'];
 
   const handleSameAsShippingChange = () => {
-    const newValue = !values['billing-same-as-shipping'];
-    setFieldValue('billing-same-as-shipping', newValue);
+    const newValue = !values.billingAddress?.['billing-same-as-shipping'];
+    setFieldValue('billingAddress.billing-same-as-shipping', newValue);
 
     if (newValue) {
       // Set the billing fields to the corresponding shipping fields
-      setFieldValue('billing-line1', values['shipping-line1']);
-      setFieldValue('billing-line2', values['shipping-line2']);
-      setFieldValue('billing-city', values['shipping-city']);
-      setFieldValue('billing-state', values['shipping-state']);
-      setFieldValue('billing-country', values['shipping-country']);
-      setFieldValue('billing-zipcode', values['shipping-zipcode']);
+      setFieldValue('billingAddress.billing-line1', values.shippingAddress['shipping-line1']);
+      setFieldValue('billingAddress.billing-line2', values.shippingAddress['shipping-line2']);
+      setFieldValue('billingAddress.billing-city', values.shippingAddress['shipping-city']);
+      setFieldValue('billingAddress.billing-state', values.shippingAddress['shipping-state']);
+      setFieldValue('billingAddress.billing-country', values.shippingAddress['shipping-country']);
+      setFieldValue('billingAddress.billing-zipcode', values.shippingAddress['shipping-zipcode']);
     }
   };
   return (
@@ -34,10 +34,8 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Field
             as={Checkbox}
             id="billing-same-as-shipping"
-            checked={values['billing-same-as-shipping']}
-            onCheckedChange={() =>
-              formik.setFieldValue('billing-same-as-shipping', !values['billing-same-as-shipping'])
-            }
+            checked={values.billingAddress?.['billing-same-as-shipping']}
+            onCheckedChange={handleSameAsShippingChange}
           />
         </div>
       </CardHeader>
@@ -46,9 +44,11 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Label htmlFor="billing-line1">Line 1</Label>
           <Field
             as={Input}
-            name="billing-line1"
+            name="billingAddress.billing-line1"
             placeholder="Line 1"
-            error={touched['billing-line1'] && errors['billing-line1']}
+            error={
+              touched.billingAddress?.['billing-line1'] && errors.billingAddress?.['billing-line1']
+            }
             disabled={disabled}
           />
         </div>
@@ -56,9 +56,11 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Label htmlFor="billing-line2">Line 2</Label>
           <Field
             as={Input}
-            name="billing-line2"
+            name="billingAddress.billing-line2"
             placeholder="Line 2"
-            error={touched['billing-line2'] && errors['billing-line2']}
+            error={
+              touched.billingAddress?.['billing-line2'] && errors.billingAddress?.['billing-line2']
+            }
             disabled={disabled}
           />
         </div>
@@ -66,9 +68,11 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Label htmlFor="billing-city">City</Label>
           <Field
             as={Input}
-            name="billing-city"
+            name="billingAddress.billing-city"
             placeholder="City"
-            error={touched['billing-city'] && errors['billing-city']}
+            error={
+              touched.billingAddress?.['billing-city'] && errors.billingAddress?.['billing-city']
+            }
             disabled={disabled}
           />
         </div>
@@ -76,9 +80,11 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Label htmlFor="billing-state">State</Label>
           <Field
             as={Input}
-            name="billing-state"
+            name="billingAddress.billing-state"
             placeholder="State"
-            error={touched['billing-state'] && errors['billing-state']}
+            error={
+              touched.billingAddress?.['billing-state'] && errors.billingAddress?.['billing-state']
+            }
             disabled={disabled}
           />
         </div>
@@ -86,9 +92,12 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Label htmlFor="billing-country">Country</Label>
           <Field
             as={Input}
-            name="billing-country"
+            name="billingAddress.billing-country"
             placeholder="Country"
-            error={touched['billing-country'] && errors['billing-country']}
+            error={
+              touched.billingAddress?.['billing-country'] &&
+              errors.billingAddress?.['billing-country']
+            }
             disabled={disabled}
           />
         </div>
@@ -96,9 +105,12 @@ export const BillingAddressForm = ({ formik }: { formik: any }) => {
           <Label htmlFor="billing-zipcode">ZIP Code</Label>
           <Field
             as={Input}
-            name="billing-zipcode"
+            name="billingAddress.billing-zipcode"
             placeholder="ZIP Code"
-            error={touched['billing-zipcode'] && errors['billing-zipcode']}
+            error={
+              touched.billingAddress?.['billing-zipcode'] &&
+              errors.billingAddress?.['billing-zipcode']
+            }
             disabled={disabled}
           />
         </div>
