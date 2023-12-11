@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { IconStar } from '@/components/icon/IconStar';
 import { Button } from '@/components/ui/button';
 import { useUpdateURL } from '@/hooks/useUpdateURL';
+import { cn } from '@/lib/shadcn-utils';
 
 export const RatingFilter = () => {
   const searchParams = useSearchParams();
@@ -27,7 +28,10 @@ export const RatingFilter = () => {
             variant="ghost"
             key={elem}
             onClick={() => onReviewSelect(String(elem))}
-            className="flex items-start justify-start pl-[2px]"
+            className={cn(
+              'flex items-start justify-start pl-[2px]',
+              elem === Number(selectedReview) && 'bg-secondary-foreground/5'
+            )}
           >
             {Array.from({ length: elem }).map((_, j) => (
               <IconStar key={j} className="w-4 h-4 fill-current text-yellow-500 mr-1" />
