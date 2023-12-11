@@ -7,6 +7,7 @@ import { TransformDataInterceptor } from 'src/common/interceptors/transformData.
 import { TransformNestedDataInterceptor } from 'src/common/interceptors/transformNestedData.interceptor';
 import { ValidatedQuery } from '../decorators/validated-query.decorator';
 import { FilterDto } from '../dtos/filter.dto';
+import { PriceRangeDto } from '../dtos/price-range.dto';
 import { ProductCardDto } from '../dtos/product.dto';
 import { SortDto } from '../dtos/sort.dto';
 import { ProductsService } from '../services/products.service';
@@ -47,5 +48,13 @@ export class ProductsController {
   @UseInterceptors(new TransformDataInterceptor(ProductCardDto))
   async getBestSellersProducts() {
     return this.productsService.getBestSellerProducts();
+  }
+
+  //an endpoint for getting max and min price
+  @Public()
+  @Get('price-range')
+  @UseInterceptors(new TransformDataInterceptor(PriceRangeDto))
+  async getPriceRange() {
+    return this.productsService.getPriceRange();
   }
 }

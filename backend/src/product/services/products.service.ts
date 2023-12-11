@@ -199,4 +199,20 @@ export class ProductsService {
       meta
     };
   }
+
+  public async getPriceRange() {
+    const { _max, _min } = await this.prismaService.product.aggregate({
+      _min: {
+        price: true
+      },
+      _max: {
+        price: true
+      }
+    });
+
+    return {
+      min: _min.price,
+      max: _max.price
+    };
+  }
 }
