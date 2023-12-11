@@ -13,7 +13,9 @@ const ProductsListingPage = () => {
       </div>
       <div className="flex flex-row items-start w-full justify-center gap-20">
         <ProductsFilters />
-        <ProductCardsSection />
+        <div className="w-full">
+          <ProductCardsSection />
+        </div>
       </div>
     </section>
   );
