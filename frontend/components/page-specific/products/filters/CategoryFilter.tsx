@@ -58,9 +58,9 @@ export const CategoryFilter = () => {
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0">
           <Command>
-            <CommandInput placeholder="Search framework..." />
+            <CommandInput placeholder="Search category..." />
             <CommandEmpty>No categories found.</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup className="max-h-[200px] overflow-y-scroll overflow-x-hidden mb-0">
               {categories?.map((category) => (
                 <CommandItem key={category.slug} value={category.slug} onSelect={onCategorySelect}>
                   <Check
