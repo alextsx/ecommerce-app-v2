@@ -1,6 +1,6 @@
 import { apiSlice } from '../api/api.slice';
-import { UserDetailsResponse } from './types';
 import { UserDetailsCacheTagsEnum } from './user-details.tags';
+import { UserDetailsResponse } from './user-details.types';
 
 const userDetailsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
