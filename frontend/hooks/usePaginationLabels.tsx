@@ -9,7 +9,7 @@ export const usePaginationLabels = ({
 }: {
   pageCount: number;
   page: number;
-  setPage: Dispatch<SetStateAction<number>>;
+  setPage: (value: number) => void;
 }) => {
   const pageLabelsArray = useMemo(
     () =>
@@ -28,7 +28,7 @@ export const usePaginationLabels = ({
         className="text-md"
         onClick={() => {
           if (page > 1) {
-            setPage((prev) => prev - 1);
+            setPage(page - 1);
           }
         }}
         disabled={page <= 1}
@@ -59,7 +59,7 @@ export const usePaginationLabels = ({
         className="text-md"
         onClick={() => {
           if (page < pageCount) {
-            setPage((prev) => prev + 1);
+            setPage(page + 1);
           }
         }}
         disabled={page >= pageCount}

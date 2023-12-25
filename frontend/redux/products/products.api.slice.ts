@@ -22,15 +22,12 @@ const productsApiSlice = apiSlice.injectEndpoints({
       providesTags: [ProductsCacheTagsEnum.BEST_SELLERS]
     }),
 
-    getProducts: builder.query<Product[], Record<string, string>>({
+    getProducts: builder.query<PaginationResponse<Product>, Record<string, string>>({
       query: (params) => {
         return {
           url: 'products',
           params
         };
-      },
-      transformResponse: (response: PaginationResponse<Product>) => {
-        return response.data;
       },
       providesTags: [ProductsCacheTagsEnum.PRODUCTS]
     }),
