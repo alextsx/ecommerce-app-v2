@@ -4,6 +4,7 @@ export const ValidatedQuery = () =>
   Query(
     new ValidationPipe({
       transform: true,
-      whitelist: true
+      whitelist: true,
+      forbidNonWhitelisted: true
     })
   );
