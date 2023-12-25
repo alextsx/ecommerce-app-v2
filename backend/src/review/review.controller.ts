@@ -1,16 +1,11 @@
-import { Controller, Get, Query, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { Review } from '@prisma/client';
 import { Public } from 'src/common/decorators';
 import { PaginationResultDto } from 'src/common/dtos/pagination-result.dto';
-import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { ValidatedQuery } from 'src/product/decorators/validated-query.decorator';
+import { FilterReviewsDto } from './dtos/filterReviews.dto';
 import { TransformReviewsResponse } from './interceptors/transformReviewsResponse.interceptor';
 import { ReviewService } from './review.service';
-
-const validationPipelineOptions = {
-  transform: true,
-  whitelist: true,
-  forbidNonWhitelisted: true
-};
 
 @Controller()
 export class ReviewController {
@@ -20,9 +15,8 @@ export class ReviewController {
   @Public()
   @UseInterceptors(new TransformReviewsResponse())
   public async getReviews(
-    @Query(new ValidationPipe(validationPipelineOptions))
-    paginationDto: PaginationDto
+    @ValidatedQuery() filterReviewsDto: FilterReviewsDto
   ): Promise<PaginationResultDto<Review>> {
-    return this.reviewService.getReviewsWithUserData(paginationDto);
+    return this.reviewService.getReviewsWithUserData(filterReviewsDto);
   }
 }
