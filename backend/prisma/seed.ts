@@ -80,15 +80,17 @@ const seedProductsAndRelated = async () => {
       data: { url: faker.image.urlPicsumPhotos(), productId: createdProduct.id }
     });
 
-    const randomUserId = await getRandomId(prisma.user);
-    await prisma.review.create({
-      data: {
-        rating: faker.number.int({ min: 1, max: 5 }),
-        user: { connect: { id: randomUserId } },
-        body: faker.lorem.paragraph(),
-        product: { connect: { id: createdProduct.id } }
-      }
-    });
+    for (let i = 0; i < faker.number.int({ min: 5, max: 20 }); i++) {
+      const randomUserId = await getRandomId(prisma.user);
+      await prisma.review.create({
+        data: {
+          rating: faker.number.int({ min: 1, max: 5 }),
+          user: { connect: { id: randomUserId } },
+          body: faker.lorem.paragraph(),
+          product: { connect: { id: createdProduct.id } }
+        }
+      });
+    }
   }
 };
 
