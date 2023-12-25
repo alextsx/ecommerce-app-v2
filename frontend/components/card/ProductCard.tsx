@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { addToCart } from '@/redux/cart/cart.slice';
 import { Product } from '@/redux/product/product.types';
-import { ProductRating } from '../page-specific/product/ProductRating';
+import { ProductRating } from '../ProductRating';
 
 export function ProductCard({ product }: { product: Product }) {
   const dispatch = useDispatch();

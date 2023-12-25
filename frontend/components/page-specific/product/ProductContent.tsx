@@ -4,12 +4,12 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import { IconStar } from '@/components/icon/IconStar';
+import { ProductRating } from '@/components/ProductRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { addToCart } from '@/redux/cart/cart.slice';
 import { useGetProductQuery } from '@/redux/product/product.api.slice';
-import { ProductRating } from './ProductRating';
 
 export const ProductContent = ({ slug }: { slug: string }) => {
   const dispatch = useDispatch();
