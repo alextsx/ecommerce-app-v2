@@ -13,6 +13,11 @@ export const useUpdateURL = () => {
     } else {
       newSearchParams.set(paramKey, paramValue);
     }
+    //check if page is in searchparams
+    if (newSearchParams.has('page')) {
+      newSearchParams.set('page', '1');
+    }
+
     router.push(`${pathname}?${newSearchParams.toString()}`);
   });
 
