@@ -26,12 +26,7 @@ export const Slider = () => {
       <Fade arrows={true} duration={2000} transitionDuration={1000} infinite={true}>
         {fadeImages.map((fadeImage, index) => (
           <div key={index} className="aspect-[16/9]">
-            <Image
-              className="object-cover"
-              src={fadeImage.url}
-              layout="fill"
-              alt={fadeImage.caption}
-            />
+            <Image className="object-cover" src={fadeImage.url} fill alt={fadeImage.caption} />
           </div>
         ))}
       </Fade>
