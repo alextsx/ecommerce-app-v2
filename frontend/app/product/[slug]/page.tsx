@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ProductContent } from '@/components/page-specific/product/ProductContent';
 import { ProductReviews } from '@/components/page-specific/product/ProductReviews';
+import { RelatedProducts } from '@/components/page-specific/product/RelatedProducts';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const IndividualProduct = ({ params: { slug } }: { params: { slug: string } }) => {
@@ -23,6 +24,7 @@ const IndividualProduct = ({ params: { slug } }: { params: { slug: string } }) =
           </TabsList>
         </div>
         <ProductReviews slug={slug} page={reviewPage} setPage={setReviewPage} />
+        <RelatedProducts slug={slug} />
       </Tabs>
     </div>
   );

@@ -30,10 +30,10 @@ export const ProductReviews = ({
         {reviews.map((review, index) => (
           <ReviewCard key={index} review={review} />
         ))}
+        <div className="flex justify-end px-10 bg-background border rounded-md py-4 mt-8">
+          <PaginationButtons />
+        </div>
       </TabsContent>
-      <div className="flex justify-end px-10 bg-background border rounded-md py-4 mt-8">
-        <PaginationButtons />
-      </div>
     </>
   );
 };

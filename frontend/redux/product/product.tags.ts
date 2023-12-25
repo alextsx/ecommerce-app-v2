@@ -1,5 +1,6 @@
 export enum ProductCacheTagsEnum {
-  PRODUCT = 'product'
+  PRODUCT = 'product',
+  RELATED = 'related'
 }
 
 export const productCacheTags = Object.values(ProductCacheTagsEnum);
