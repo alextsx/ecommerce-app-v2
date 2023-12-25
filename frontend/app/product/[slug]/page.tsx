@@ -22,7 +22,7 @@ const IndividualProduct = ({ params: { slug } }: { params: { slug: string } }) =
             </TabsTrigger>
           </TabsList>
         </div>
-        <ProductReviews page={reviewPage} setPage={setReviewPage} />
+        <ProductReviews slug={slug} page={reviewPage} setPage={setReviewPage} />
       </Tabs>
     </div>
   );

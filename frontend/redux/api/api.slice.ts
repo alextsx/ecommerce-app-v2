@@ -12,6 +12,7 @@ import { RefreshResponse } from '../auth/auth.types';
 import { categoriesCacheTags } from '../categories/categories.tags';
 import { productCacheTags } from '../product/product.tags';
 import { productsCacheTags } from '../products/products.tags';
+import { reviewsCacheTags } from '../reviews/reviews.tags';
 import { RootState } from '../store';
 import { userDetailsCacheTags } from '../user-details/user-details.tags';
 
@@ -92,7 +93,8 @@ const tags = [
   ...userDetailsCacheTags,
   ...productsCacheTags,
   ...productCacheTags,
-  ...categoriesCacheTags
+  ...categoriesCacheTags,
+  ...reviewsCacheTags
 ];
 export type ApiTagType = (typeof tags)[number];
 
