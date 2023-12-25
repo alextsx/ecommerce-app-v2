@@ -14,7 +14,7 @@ export const useUpdateURL = () => {
       newSearchParams.set(paramKey, paramValue);
     }
     //check if page is in searchparams
-    if (newSearchParams.has('page')) {
+    if (paramKey !== 'page' && newSearchParams.has('page')) {
       newSearchParams.set('page', '1');
     }
 
