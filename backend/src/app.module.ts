@@ -8,6 +8,7 @@ import { OrderModule } from './order/order.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
+import { StripeModule } from './stripe/stripe.module';
 import { UserDetailsModule } from './user-details/user-details.module';
 import { UserModule } from './user/user.module';
 
@@ -24,7 +25,8 @@ import { UserModule } from './user/user.module';
     ReviewModule,
     UserModule,
     UserDetailsModule,
-    OrderModule
+    OrderModule,
+    StripeModule
   ],
   providers: [
     {
