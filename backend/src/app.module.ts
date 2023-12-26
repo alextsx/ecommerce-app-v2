@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { AtGuard } from './common/guards';
 import { config } from './config';
+import { CustomerModule } from './customer/customer.module';
 import { OrderModule } from './order/order.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductModule } from './product/product.module';
@@ -26,7 +28,9 @@ import { UserModule } from './user/user.module';
     UserModule,
     UserDetailsModule,
     OrderModule,
-    StripeModule
+    StripeModule,
+    AddressModule,
+    CustomerModule
   ],
   providers: [
     {

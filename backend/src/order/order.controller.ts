@@ -2,7 +2,7 @@ import { Controller, Post } from '@nestjs/common';
 import { GetUserInfoFromAtPayload, Public } from 'src/common/decorators';
 import { ValidatedBody } from 'src/common/decorators/validated-body.decorator';
 import { CreateOrderDto } from './dtos/create-order.dto';
-import { OrderService } from './order.service';
+import { OrderService } from './services/order.service';
 
 @Controller('order')
 export class OrderController {
