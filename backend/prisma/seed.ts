@@ -1,5 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { FulfillmentStatus, PaymentStatus, PrismaClient, UserRole } from '@prisma/client';
+import {
+  FulfillmentStatus,
+  PaymentMethod,
+  PaymentStatus,
+  PrismaClient,
+  UserRole
+} from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -164,7 +170,8 @@ const seedOrdersAndRelated = async () => {
       total: faker.number.float({ min: 10, max: 1000 }),
       customerId: newCustomerIds[i],
       fulfillmentStatus: getRandomEnumValue(FulfillmentStatus),
-      paymentStatus: getRandomEnumValue(PaymentStatus)
+      paymentStatus: getRandomEnumValue(PaymentStatus),
+      paymentMethod: getRandomEnumValue(PaymentMethod)
     };
 
     const createdOrder = await prisma.order.create({ data: orderData });

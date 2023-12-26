@@ -77,7 +77,8 @@ export class OrderService {
     // Create order
     const order = await this.createOrder({
       customerId: customer.id,
-      total
+      total,
+      paymentMethod: checkoutDetails.paymentMethod
     });
 
     // Create order items
@@ -93,9 +94,21 @@ export class OrderService {
         });
       })
     );
+
+    //payment
+
+    //return url
   }
 
-  private async createOrder({ customerId, total }: { customerId: string; total: number }) {
+  private async createOrder({
+    customerId,
+    total,
+    paymentMethod
+  }: {
+    customerId: string;
+    total: number;
+    paymentMethod: 'stripe' | 'cod';
+  }) {
     return this.prismaService.order.create({
       data: {
         customer: {
@@ -103,6 +116,7 @@ export class OrderService {
             id: customerId
           }
         },
+        paymentMethod,
         total
       }
     });

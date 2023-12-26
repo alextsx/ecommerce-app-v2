@@ -30,6 +30,11 @@ enum PaymentStatus {
   CANCELLED
 }
 
+enum PaymentMethod {
+  stripe
+  cod
+}
+
 //! MODELS
 model User {
   id String @id @default(uuid())
@@ -206,6 +211,7 @@ model Order {
   //subtotal Decimal
   //tax      Decimal
   total             Decimal
+  paymentMethod     PaymentMethod     @default(cod)
   fulfillmentStatus FulfillmentStatus @default(PENDING)
   paymentStatus     PaymentStatus     @default(PENDING)
 
