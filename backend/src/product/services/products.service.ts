@@ -235,11 +235,18 @@ export class ProductsService {
     };
   }
 
-  public getProductsForSlugs(slugs: string[]) {
+  public getProductsWithImagesForSlugs(slugs: string[]) {
     return this.prismaService.product.findMany({
       where: {
         slug: {
           in: slugs
+        }
+      },
+      include: {
+        productImages: {
+          select: {
+            url: true
+          }
         }
       }
     });
