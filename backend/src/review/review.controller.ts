@@ -1,8 +1,8 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { Review } from '@prisma/client';
 import { Public } from 'src/common/decorators';
+import { ValidatedQuery } from 'src/common/decorators/validated-query.decorator';
 import { PaginationResultDto } from 'src/common/dtos/pagination-result.dto';
-import { ValidatedQuery } from 'src/product/decorators/validated-query.decorator';
 import { FilterReviewsDto } from './dtos/filterReviews.dto';
 import { TransformReviewsResponse } from './interceptors/transformReviewsResponse.interceptor';
 import { ReviewService } from './review.service';

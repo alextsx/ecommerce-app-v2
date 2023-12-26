@@ -5,7 +5,7 @@ import { PaginationResultDto } from 'src/common/dtos/pagination-result.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { TransformDataInterceptor } from 'src/common/interceptors/transformData.interceptor';
 import { TransformNestedDataInterceptor } from 'src/common/interceptors/transformNestedData.interceptor';
-import { ValidatedQuery } from '../decorators/validated-query.decorator';
+import { ValidatedQuery } from '../../common/decorators/validated-query.decorator';
 import { FilterDto } from '../dtos/filter.dto';
 import { PriceRangeDto } from '../dtos/price-range.dto';
 import { ProductCardDto } from '../dtos/product.dto';
