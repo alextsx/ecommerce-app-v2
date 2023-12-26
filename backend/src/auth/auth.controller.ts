@@ -1,8 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import { GetUserInfoFromAtPayload, Public } from 'src/common/decorators';
-import { GetUserInfoFromRtPayload } from 'src/common/decorators/get-userinfo-from-atpayload';
+import { GetUserInfoFromAtPayload, GetUserInfoFromRtPayload, Public } from 'src/common/decorators';
 import { RtGuard } from 'src/common/guards';
 import { Config } from 'src/config';
 import { LoginDto, RegistrationDto } from './dtos/auth.dto';
