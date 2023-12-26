@@ -51,7 +51,7 @@ export function ProductCard({ product }: { product: Product }) {
             {product.description ?? 'No description'}
           </p>
           <div className="absolute w-full h-full top-14 left-6   xl:top-4 xl:left-0 xl:opacity-0 opacity-100  justify-between flex-col group-hover:opacity-100 transition-opacity duration-200 xl:flex xl:justify-between xl:flex-row">
-            <Link href={`product/${product.slug}`}>
+            <Link href={`/product/${product.slug}`}>
               <Button variant="outline">View Product</Button>
             </Link>
             {/*TODO CUSTOMHOOK */}
