@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { AtGuard } from './common/guards';
 import { config } from './config';
+import { OrderModule } from './order/order.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
@@ -22,7 +23,8 @@ import { UserModule } from './user/user.module';
     CategoryModule,
     ReviewModule,
     UserModule,
-    UserDetailsModule
+    UserDetailsModule,
+    OrderModule
   ],
   providers: [
     {
