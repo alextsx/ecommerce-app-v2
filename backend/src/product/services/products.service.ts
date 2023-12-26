@@ -197,16 +197,6 @@ export class ProductsService {
     const total = await this.prismaService.product.count({ where });
     const last_page = Math.ceil(total / limit);
 
-    const findManyOptions = {
-      where,
-      include,
-      orderBy,
-      skip,
-      take: limit
-    };
-
-    console.log(JSON.stringify(findManyOptions, null, 2));
-
     const products = await this.prismaService.product.findMany({
       where,
       include,
