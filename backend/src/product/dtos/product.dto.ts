@@ -38,12 +38,15 @@ class BaseProductDto implements Partial<Product> {
 
   @Exclude()
   updatedAt: Date;
+  @Transform(({ value }: { value: number }) => Number(value.toFixed(2)))
+  rating: number;
 }
 
+//used for product/[slug]
 export class ProductDto extends BaseProductDto {
-  rating: number;
   @Transform(({ value }: { value: Category }) => value.name)
   category: string;
 }
 
+//used for product cards (homepage,related products,products page)
 export class ProductCardDto extends BaseProductDto {}
