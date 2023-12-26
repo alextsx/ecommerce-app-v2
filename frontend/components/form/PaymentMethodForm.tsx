@@ -1,13 +1,14 @@
-import { Field } from 'formik';
+import { Field, FormikProps } from 'formik';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { CheckoutFormType } from '@/app/(checkout-stage)/checkout/page';
 
-export const PaymentMethodForm = ({ formik }: { formik: any }) => {
+export const PaymentMethodForm = ({ formik }: { formik: FormikProps<CheckoutFormType> }) => {
   const { setFieldValue, values } = formik;
 
-  const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue('paymentMethod', event.target.value);
+  const handlePaymentMethodChange = (value: string) => {
+    setFieldValue('paymentMethod', value);
   };
 
   return (
@@ -18,9 +19,9 @@ export const PaymentMethodForm = ({ formik }: { formik: any }) => {
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RadioGroup
-            id="payment-option"
+            name="paymentMethod"
             value={values.paymentMethod}
-            onChange={handlePaymentMethodChange}
+            onValueChange={handlePaymentMethodChange}
           >
             <Label className="flex items-center gap-2" htmlFor="stripe">
               <Field as={RadioGroupItem} id="stripe" value="stripe" />
