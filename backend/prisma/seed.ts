@@ -135,7 +135,11 @@ const _seedCustomersAndRelated = async () =>
 
       const data = {
         shippingAddress: { connect: { id: shippingAddress.id } },
-        billingAddress: { connect: { id: billingAddress.id } }
+        billingAddress: { connect: { id: billingAddress.id } },
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        phone: faker.phone.number(),
+        email: faker.internet.email()
       };
 
       if (faker.datatype.boolean()) {

@@ -184,6 +184,11 @@ model Customer {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  firstName String
+  lastName  String
+  phone     String
+  email     String
+
   user              User?   @relation(fields: [userId], references: [id])
   userId            String?
   shippingAddress   Address @relation(fields: [shippingAddressId], references: [id], name: "customerShippingAddressRelation")
