@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { Product } from '@prisma/client';
 import { AddressService } from 'src/address/address.service';
 import { CreateAddressDto } from 'src/address/dtos/create-address.dto';
 import { CustomerService } from 'src/customer/customer.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductsService } from 'src/product/services/products.service';
 import { PaymentIntentService } from 'src/stripe/services/payment-intent.service';
-import { CheckoutDetailsDto, CreateOrderDto } from '../dtos/create-order.dto';
+import { CartItemDto, CheckoutDetailsDto, CreateOrderDto } from '../dtos/create-order.dto';
+import { InsufficientQuantityError } from '../errors/insufficient-quantity.error';
+import { InvalidCartItemsError } from '../errors/invalid-cartitems.error';
+import { ProductNotFoundError } from '../errors/product-notfound.error';
 import { OrderItemService } from './order-item.service';
 
 @Injectable()
@@ -50,20 +54,23 @@ export class OrderService {
     // Create customer
     const customer = await this.customerService.createCustomer({
       email: checkoutDetails.email,
-      firstName: checkoutDetails['first-name'],
-      lastName: checkoutDetails['last-name'],
+      firstName: checkoutDetails.firstName,
+      lastName: checkoutDetails.lastName,
       phone: checkoutDetails.phone,
       shippingAddressId: shippingAddress.id,
       billingAddressId: billingAddress.id,
       ...(userId && { userId })
     });
 
-    const productIds = cartItems.map((item) => item.slug);
-    const products = await this.productsService.getProductsForSlugs(productIds);
+    const productSlugs = cartItems.map((item) => item.slug);
+    const products = await this.productsService.getProductsForSlugs(productSlugs);
+
+    // Validate cart items
+    this.validateCartItems({ cartItems, products });
 
     // Calculate total
     const total = cartItems.reduce((acc, cartItem) => {
-      const product = products.find((product) => product.id === cartItem.slug);
+      const product = products.find((product) => product.slug === cartItem.slug);
       return acc + product.price * cartItem.quantity;
     }, 0);
 
@@ -76,7 +83,7 @@ export class OrderService {
     // Create order items
     await Promise.all(
       cartItems.map((cartItem) => {
-        const product = products.find((product) => product.id === cartItem.slug);
+        const product = products.find((product) => product.slug === cartItem.slug);
         return this.orderItemService.createOrderItem({
           orderId: order.id,
           productId: product.id,
@@ -116,5 +123,32 @@ export class OrderService {
       state: checkoutDetails[`${prefix}-state`],
       zipcode: checkoutDetails[`${prefix}-zipcode`]
     };
+  }
+
+  private validateCartItems({
+    cartItems,
+    products
+  }: {
+    cartItems: CartItemDto[];
+    products: Product[];
+  }) {
+    if (cartItems.length === 0) {
+      throw new InvalidCartItemsError();
+    }
+    if (cartItems.length !== products.length) {
+      throw new InvalidCartItemsError();
+    }
+
+    //we should go through each cart item and check if quantity is less or equal to
+    //the inventory (stock) of the product in db
+    cartItems.forEach((cartItem) => {
+      const product = products.find((product) => product.slug === cartItem.slug);
+      if (!product) {
+        throw new ProductNotFoundError(cartItem.slug);
+      }
+      if (product.inventory < cartItem.quantity) {
+        throw new InsufficientQuantityError(cartItem.slug);
+      }
+    });
   }
 }
