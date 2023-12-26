@@ -7,14 +7,12 @@ import { IconStar } from '@/components/icon/IconStar';
 import { ProductRating } from '@/components/ProductRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useToggleToast } from '@/hooks/useToggleToast';
-import { addToCart } from '@/redux/cart/cart.slice';
+import { useAddToCart } from '@/hooks/useAddToCart';
 import { useGetProductQuery } from '@/redux/product/product.api.slice';
 
 export const ProductContent = ({ slug }: { slug: string }) => {
-  const dispatch = useDispatch();
-  const toast = useToggleToast();
   const { data: product, isLoading, isFetching } = useGetProductQuery(slug);
+  const { addToCart } = useAddToCart();
 
   if (isLoading || isFetching) {
     return <div>Loading...</div>;
@@ -24,7 +22,15 @@ export const ProductContent = ({ slug }: { slug: string }) => {
     return <div>Product not found</div>;
   }
 
-  const { name, description, price, productImages, category } = product;
+  const {
+    name,
+    description,
+    productImages,
+    rating,
+    formattedPrice,
+    discountedPriceFormatted,
+    category
+  } = product;
   const largeImage = productImages?.[0] ?? '';
   const thumbnailImages = productImages?.slice(1, 4);
 
@@ -54,36 +60,31 @@ export const ProductContent = ({ slug }: { slug: string }) => {
       <div className="flex flex-col justify-between space-y-4">
         <div>
           <div className="flex justify-between items-start">
-            <h1 className="font-bold text-3xl">{product.name}</h1>
+            <h1 className="font-bold text-3xl">{name}</h1>
             <div className="text-3xl font-bold">
-              {product.discountedPriceFormatted ? (
+              {discountedPriceFormatted ? (
                 <div className="flex text-muted-foreground flex-col gap-2">
-                  <p className="line-through">{product.formattedPrice}</p>
-                  <p className="text-green-700 font-bold ">{product.discountedPriceFormatted}</p>
+                  <p className="line-through">{formattedPrice}</p>
+                  <p className="text-green-700 font-bold ">{discountedPriceFormatted}</p>
                 </div>
               ) : (
-                <p className="text-4xl">{product.formattedPrice}</p>
+                <p className="text-4xl">{formattedPrice}</p>
               )}
             </div>
           </div>
           <div className="flex flex-col items-start justify-center gap-4">
             <div className="flex items-center gap-0.5">
-              <ProductRating rating={product.rating} />({product.rating.toFixed(2)})
+              <ProductRating rating={rating} />
             </div>
-            <Badge className="w-auto h-auto text-md">{product.category}</Badge>
+            <Badge className="w-auto h-auto text-md">{category}</Badge>
           </div>
         </div>
-        <p className="text-gray-500">{product.description}</p>
+        <p className="text-gray-500">{description}</p>
         <Button
           className="relative text-lg"
           size="lg"
           onClick={() => {
-            dispatch(addToCart(product));
-            toast({
-              title: 'Success',
-              description: `${product.name} added to cart`,
-              variant: 'constructive'
-            });
+            addToCart(product);
           }}
         >
           <FaShoppingCart className="w-5 h-5 absolute right-4 top-3" />

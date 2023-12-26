@@ -18,6 +18,7 @@ export const ProductRating = ({ rating }: { rating: number }) => {
           className="w-5 h-5 fill-muted stroke-muted-foreground"
         />
       ))}
+      <span className="text-sm text-muted-foreground ml-1"> ({rating})</span>
     </>
   );
 };

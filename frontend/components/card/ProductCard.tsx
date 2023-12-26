@@ -1,16 +1,13 @@
-import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useToggleToast } from '@/hooks/useToggleToast';
-import { addToCart } from '@/redux/cart/cart.slice';
+import { useAddToCart } from '@/hooks/useAddToCart';
 import { Product } from '@/redux/product/product.types';
 import { ProductRating } from '../ProductRating';
 
 export function ProductCard({ product }: { product: Product }) {
-  const dispatch = useDispatch();
-  const toast = useToggleToast();
+  const { addToCart } = useAddToCart();
   return (
     <div className="w-80 h-[350px] border-2 group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 relative">
       <div className="h-2/5 relative">
@@ -30,7 +27,6 @@ export function ProductCard({ product }: { product: Product }) {
             {product.rating && (
               <div className="flex items-center gap-1">
                 <ProductRating rating={product.rating} />
-                <p className="text-sm text-muted-foreground">({product.rating.toFixed(2)})</p>
               </div>
             )}
             {product.discountedPriceFormatted ? (
@@ -54,15 +50,9 @@ export function ProductCard({ product }: { product: Product }) {
             <Link href={`/product/${product.slug}`}>
               <Button variant="outline">View Product</Button>
             </Link>
-            {/*TODO CUSTOMHOOK */}
             <Button
               onClick={() => {
-                dispatch(addToCart(product));
-                toast({
-                  title: 'Success',
-                  description: `${product.name} added to cart`,
-                  variant: 'constructive'
-                });
+                addToCart(product);
               }}
             >
               Add to Cart
