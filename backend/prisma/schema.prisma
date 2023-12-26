@@ -223,7 +223,9 @@ model Order {
 model OrderItem {
   id String @id @default(uuid())
 
-  quantity Int
+  quantity  Int
+  unitPrice Decimal
+  total     Decimal
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -169,12 +169,15 @@ const seedOrdersAndRelated = async () => {
 
     const createdOrder = await prisma.order.create({ data: orderData });
     const randomProductId = await getRandomId(prisma.product);
+    const productInDb = await prisma.product.findUnique({ where: { id: randomProductId } });
 
     await prisma.orderItem.create({
       data: {
         quantity: faker.number.int({ min: 1, max: 5 }),
         order: { connect: { id: createdOrder.id } },
-        product: { connect: { id: randomProductId } }
+        product: { connect: { id: randomProductId } },
+        total: productInDb.price * orderData.total,
+        unitPrice: productInDb.price
       }
     });
   }
