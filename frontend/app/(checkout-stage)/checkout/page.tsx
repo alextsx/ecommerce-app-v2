@@ -17,57 +17,45 @@ import { parseErrorResponse } from '@/lib/parseErrorResponse';
 import { selectCart, selectCartTotal } from '@/redux/cart/cart.slice';
 import { checkoutSchema } from '@/schemas/checkout.schema';
 
-type CheckoutFormType = {
-  billingAddress: {
-    'billing-same-as-shipping': boolean;
-    'billing-line1'?: string;
-    'billing-line2'?: string;
-    'billing-city'?: string;
-    'billing-state'?: string;
-    'billing-country'?: string;
-    'billing-zipcode'?: string;
-  };
-  shippingAddress: {
-    'shipping-line1': string;
-    'shipping-line2'?: string;
-    'shipping-city': string;
-    'shipping-state': string;
-    'shipping-country': string;
-    'shipping-zipcode': string;
-  };
-  customer: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-  };
+export type CheckoutFormType = {
+  'billing-same-as-shipping': boolean;
+  'billing-line1': string;
+  'billing-line2': string;
+  'billing-city': string;
+  'billing-state': string;
+  'billing-country': string;
+  'billing-zipcode': string;
+  'shipping-line1': string;
+  'shipping-line2': string;
+  'shipping-city': string;
+  'shipping-state': string;
+  'shipping-country': string;
+  'shipping-zipcode': string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
   paymentMethod: 'stripe' | 'cod';
 };
 
 const initialValues: CheckoutFormType = {
-  billingAddress: {
-    'billing-same-as-shipping': false,
-    'billing-line1': '',
-    'billing-line2': '',
-    'billing-city': '',
-    'billing-state': '',
-    'billing-country': '',
-    'billing-zipcode': ''
-  },
-  shippingAddress: {
-    'shipping-line1': '',
-    'shipping-line2': '',
-    'shipping-city': '',
-    'shipping-state': '',
-    'shipping-country': '',
-    'shipping-zipcode': ''
-  },
-  customer: {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: ''
-  },
+  'billing-same-as-shipping': false,
+  'billing-line1': '',
+  'billing-line2': '',
+  'billing-city': '',
+  'billing-state': '',
+  'billing-country': '',
+  'billing-zipcode': '',
+  'shipping-line1': '',
+  'shipping-line2': '',
+  'shipping-city': '',
+  'shipping-state': '',
+  'shipping-country': '',
+  'shipping-zipcode': '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
   paymentMethod: 'cod'
 };
 

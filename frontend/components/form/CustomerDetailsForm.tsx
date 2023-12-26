@@ -1,9 +1,10 @@
-import { Field } from 'formik';
+import { Field, FormikProps } from 'formik';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CheckoutFormType } from '@/app/(checkout-stage)/checkout/page';
 
-export const CustomerDetailsForm = ({ formik }: { formik: any }) => {
+export const CustomerDetailsForm = ({ formik }: { formik: FormikProps<CheckoutFormType> }) => {
   const { touched, errors } = formik;
 
   return (
@@ -13,39 +14,39 @@ export const CustomerDetailsForm = ({ formik }: { formik: any }) => {
       </CardHeader>
       <CardContent>
         <div>
-          <Label htmlFor="customer.firstName">First Name</Label>
+          <Label htmlFor="firstName">First Name</Label>
           <Field
             as={Input}
-            name="customer.firstName"
+            name="firstName"
             placeholder="First Name"
-            error={touched.customer?.firstName && errors.customer?.firstName}
+            error={touched.firstName && errors.firstName}
           />
         </div>
         <div>
-          <Label htmlFor="customer.lastName">Last Name</Label>
+          <Label htmlFor="lastName">Last Name</Label>
           <Field
             as={Input}
-            name="customer.lastName"
+            name="lastName"
             placeholder="Last Name"
-            error={touched.customer?.lastName && errors.customer?.lastName}
+            error={touched.lastName && errors.lastName}
           />
         </div>
         <div>
-          <Label htmlFor="customer.email">Email</Label>
+          <Label htmlFor="email">Email</Label>
           <Field
             as={Input}
-            name="customer.email"
+            name="email"
             placeholder="Email"
-            error={touched.customer?.email && errors.customer?.email}
+            error={touched.email && errors.email}
           />
         </div>
         <div>
-          <Label htmlFor="customer.phone">Phone</Label>
+          <Label htmlFor="phone">Phone</Label>
           <Field
             as={Input}
-            name="customer.phone"
+            name="phone"
             placeholder="Phone"
-            error={touched.customer?.phone && errors.customer?.phone}
+            error={touched.phone && errors.phone}
           />
         </div>
       </CardContent>
