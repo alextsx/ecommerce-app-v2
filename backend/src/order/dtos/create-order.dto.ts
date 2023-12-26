@@ -93,7 +93,7 @@ export class CheckoutDetailsDto {
   paymentMethod: 'stripe' | 'cod';
 }
 
-export class CartItemsDto {
+export class CartItemDto {
   @IsString()
   slug: string;
   @Min(1)
@@ -105,8 +105,8 @@ export class CreateOrderDto {
   @Type(() => CheckoutDetailsDto)
   checkoutDetails: CheckoutDetailsDto;
   @ValidateNested({ each: true })
-  @Type(() => CartItemsDto)
+  @Type(() => CartItemDto)
   @IsArray()
   @ArrayMinSize(1)
-  cartItems: CartItemsDto[];
+  cartItems: CartItemDto[];
 }

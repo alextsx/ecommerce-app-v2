@@ -234,4 +234,14 @@ export class ProductsService {
       max: _max.price
     };
   }
+
+  public getProductsForSlugs(slugs: string[]) {
+    return this.prismaService.product.findMany({
+      where: {
+        slug: {
+          in: slugs
+        }
+      }
+    });
+  }
 }

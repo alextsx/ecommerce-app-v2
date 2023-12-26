@@ -14,7 +14,7 @@ export class OrderController {
     @ValidatedBody()
     createOrderDto: CreateOrderDto
   ) {
-    return this.orderService.createOrder({
+    return this.orderService.processOrder({
       userId,
       createOrderDto
     });
@@ -22,7 +22,12 @@ export class OrderController {
 
   @Post('guest')
   @Public()
-  public async createGuestOrder() {
-    return this.orderService.createGuestOrder();
+  public async createGuestOrder(
+    @ValidatedBody()
+    createOrderDto: CreateOrderDto
+  ) {
+    return this.orderService.processOrder({
+      createOrderDto
+    });
   }
 }
