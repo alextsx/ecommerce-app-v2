@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InsufficientQuantityError } from 'src/order/errors/insufficient-quantity.error';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -80,6 +81,30 @@ export class ProductService {
       },
       select: {
         categoryId: true
+      }
+    });
+  }
+
+  public async decreaseInventory({ productId, quantity }: { productId: string; quantity: number }) {
+    const product = await this.prismaService.product.findUnique({
+      where: {
+        id: productId
+      },
+      select: {
+        slug: true,
+        inventory: true
+      }
+    });
+
+    if (product.inventory < quantity) {
+      throw new InsufficientQuantityError(product.slug);
+    }
+    return this.prismaService.product.update({
+      where: {
+        id: productId
+      },
+      data: {
+        inventory: product.inventory - quantity
       }
     });
   }

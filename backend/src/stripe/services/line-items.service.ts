@@ -4,7 +4,7 @@ import { CartItemDto } from 'src/order/dtos/create-order.dto';
 import Stripe from 'stripe';
 import { StripeService } from './stripe.service';
 
-type ProductWithImage = Product & {
+export type ProductWithImage = Product & {
   productImages: {
     url: string;
   }[];

@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Product } from '@prisma/client';
 import { AddressService } from 'src/address/address.service';
 import { CreateAddressDto } from 'src/address/dtos/create-address.dto';
+import { Config } from 'src/config';
 import { CustomerService } from 'src/customer/customer.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProductService } from 'src/product/services/product.service';
 import { ProductsService } from 'src/product/services/products.service';
 import { CheckoutSessionService } from 'src/stripe/services/checkout-session.service';
-import { LineItemsService } from 'src/stripe/services/line-items.service';
+import { LineItemsService, ProductWithImage } from 'src/stripe/services/line-items.service';
 import { CartItemDto, CheckoutDetailsDto, CreateOrderDto } from '../dtos/create-order.dto';
 import { InsufficientQuantityError } from '../errors/insufficient-quantity.error';
 import { InvalidCartItemsError } from '../errors/invalid-cartitems.error';
@@ -19,11 +22,12 @@ export class OrderService {
     private readonly addressService: AddressService,
     private readonly customerService: CustomerService,
     private readonly orderItemService: OrderItemService,
-    private readonly paymentIntentService: CheckoutSessionService,
     private readonly prismaService: PrismaService,
     private readonly productsService: ProductsService,
+    private readonly productService: ProductService,
     private readonly checkoutSessionService: CheckoutSessionService,
-    private readonly lineItemsService: LineItemsService
+    private readonly lineItemsService: LineItemsService,
+    private readonly configService: ConfigService<Config>
   ) {}
 
   public async processOrder({
@@ -100,6 +104,39 @@ export class OrderService {
       })
     );
 
+    await Promise.all(
+      cartItems.map((cartItem) => {
+        const product = products.find((product) => product.slug === cartItem.slug);
+        return this.productService.decreaseInventory({
+          productId: product.id,
+          quantity: cartItem.quantity
+        });
+      })
+    );
+
+    switch (checkoutDetails.paymentMethod) {
+      case 'stripe':
+        return this.handleStripePayment({ products, cartItems });
+      case 'cod':
+        return this.handleCodPayment();
+      default:
+        throw new Error('Invalid payment method');
+    }
+  }
+
+  private handleCodPayment() {
+    return {
+      redirect_url: this.configService.get('success_url')
+    };
+  }
+
+  private async handleStripePayment({
+    products,
+    cartItems
+  }: {
+    products: ProductWithImage[];
+    cartItems: CartItemDto[];
+  }) {
     //Create line items
     const lineItems = this.lineItemsService.createLineItems(products, cartItems);
 
@@ -108,14 +145,6 @@ export class OrderService {
       line_items: lineItems
     });
 
-    /*     // Decrease inventory
-    await Promise.all(
-      cartItems.map((cartItem) => {
-        const product = products.find((product) => product.slug === cartItem.slug);
-        return this.productsService.decreaseInventory(product.id, cartItem.quantity);
-      })
-    );
- */
     return {
       checkoutSessionId: checkoutSession.id,
       url: checkoutSession.url
