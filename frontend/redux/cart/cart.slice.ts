@@ -7,7 +7,7 @@ const initialState: CartState = [];
 
 const reducers = {
   emptyCart: (state: CartState) => {
-    state = [];
+    state.splice(0);
   },
   addToCart: (state: CartState, action: PayloadAction<Product>) => {
     const item = action.payload;
