@@ -81,8 +81,6 @@ const ProfilePage = () => {
 
   const { billingAddress, shippingAddress, firstName, lastName, phone } = userDetails;
 
-  console.log(userDetails);
-
   const initialValues: UpdateProfileFormType = {
     'billing-same-as-shipping': userDetails['billing-same-as-shipping'] || false,
     'billing-line1': billingAddress?.line1 || '',
