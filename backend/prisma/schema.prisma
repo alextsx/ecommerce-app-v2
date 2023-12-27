@@ -28,6 +28,7 @@ enum PaymentStatus {
   PENDING
   PAID
   CANCELLED
+  EXPIRED
 }
 
 enum PaymentMethod {
