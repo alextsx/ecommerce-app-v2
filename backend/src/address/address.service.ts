@@ -30,4 +30,12 @@ export class AddressService {
       zipcode: checkoutDetails[`${prefix}-zipcode`]
     };
   }
+
+  public deleteAddress({ addressId }: { addressId: string }) {
+    return this.prismaService.address.delete({
+      where: {
+        id: addressId
+      }
+    });
+  }
 }
