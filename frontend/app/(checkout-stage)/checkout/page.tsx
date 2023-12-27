@@ -13,8 +13,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Separator } from '@/components/ui/separator';
 import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
+import getStripe from '@/lib/get-stripejs';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
+import { selectAccessToken } from '@/redux/auth/auth.slice';
 import { selectCart, selectCartTotal } from '@/redux/cart/cart.slice';
+import {
+  useCreateGuestOrderMutation,
+  useCreateLoggedInOrderMutation
+} from '@/redux/order/order.api.slice';
+import { CreateOrderResponseType } from '@/redux/order/order.types';
 import { checkoutSchema } from '@/schemas/checkout.schema';
 
 export type CheckoutFormType = {
@@ -64,6 +71,8 @@ const CheckoutPage = () => {
 
   const totalPrice = useSelector(selectCartTotal);
   const cart = useSelector(selectCart);
+  const isLoggedIn = useSelector(selectAccessToken);
+
   useEffect(() => {
     if (!cart.length) {
       router.push('/cart');
@@ -74,17 +83,48 @@ const CheckoutPage = () => {
   const { visible, show, hide, AlertBoxComponent } = useAlertBox();
   const toggleToast = useToggleToast();
 
+  //mutations
+  const [placeOrderGuest, { isLoading: isGuestLoading }] = useCreateGuestOrderMutation();
+  const [placeOrderUser, { isLoading: isUserLoading }] = useCreateLoggedInOrderMutation();
+
   const onSubmit = async (values: any) => {
     hide();
-    console.log(values);
     try {
+      const mutationFn = isLoggedIn ? placeOrderUser : placeOrderGuest;
+      const requestBody = {
+        checkoutDetails: values,
+        cartItems: cart.map((item) => ({
+          slug: item.slug,
+          quantity: item.quantity
+        }))
+      };
+
+      const response: CreateOrderResponseType = await mutationFn(requestBody).unwrap();
+
+      //cod
+      if ('redirect_url' in response) {
+        toggleToast({
+          title: 'Success',
+          description: 'Order successfully placed!',
+          variant: 'constructive'
+        });
+        router.push(response.redirect_url);
+        return;
+      }
+
+      //stripe
+      const stripe = await getStripe();
+      await stripe!.redirectToCheckout({
+        sessionId: response.checkoutSessionId
+      });
+
       toggleToast({
-        title: 'Success',
-        description: 'Order successfully placed!',
+        title: 'Order successfully placed',
+        description: 'You will be redirected to the payment page.',
         variant: 'constructive'
       });
 
-      router.push('/');
+      return;
     } catch (err) {
       const message = parseErrorResponse(err);
       show({
@@ -94,6 +134,7 @@ const CheckoutPage = () => {
       });
     }
   };
+
   const formik = useFormik({
     initialValues,
     onSubmit,
@@ -104,7 +145,7 @@ const CheckoutPage = () => {
 
   const { values, touched, errors, handleSubmit } = formik;
 
-  const isBtnDisabled = /* isLoading || ! */ !formik.isValid || !cart.length;
+  const isBtnDisabled = isUserLoading || isGuestLoading || !formik.isValid || !cart.length;
 
   return (
     <FormikProvider value={formik}>
@@ -113,8 +154,8 @@ const CheckoutPage = () => {
         onSubmit={handleSubmit}
         noValidate
       >
-        {visible && <AlertBoxComponent />}
         <div className="max-w-xl w-full space-y-10">
+          {visible && <AlertBoxComponent />}
           <CustomerDetailsForm formik={formik} />
           <ShippingAddressForm formik={formik} />
           <BillingAddressForm formik={formik} />
@@ -128,7 +169,7 @@ const CheckoutPage = () => {
             <CardContent className="grid gap-4">
               <div className="flex items-center">
                 <div>Subtotal</div>
-                <div className="ml-auto">${totalPrice}</div>
+                <div className="ml-auto">${totalPrice?.toFixed(2)}</div>
               </div>
               <div className="flex items-center">
                 <div>Tax</div>
@@ -141,7 +182,7 @@ const CheckoutPage = () => {
               <Separator />
               <div className="flex items-center font-medium">
                 <div>Total</div>
-                <div className="ml-auto">${totalPrice}</div>
+                <div className="ml-auto">${totalPrice?.toFixed(2)}</div>
               </div>
             </CardContent>
             <CardFooter>
