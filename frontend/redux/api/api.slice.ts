@@ -10,6 +10,7 @@ import { deleteCredentials, setAccessToken } from '../auth/auth.slice';
 import { authCacheTags } from '../auth/auth.tags';
 import { RefreshResponse } from '../auth/auth.types';
 import { categoriesCacheTags } from '../categories/categories.tags';
+import { orderCacheTags } from '../order/order.tags';
 import { productCacheTags } from '../product/product.tags';
 import { productsCacheTags } from '../products/products.tags';
 import { reviewsCacheTags } from '../reviews/reviews.tags';
@@ -94,7 +95,8 @@ const tags = [
   ...productsCacheTags,
   ...productCacheTags,
   ...categoriesCacheTags,
-  ...reviewsCacheTags
+  ...reviewsCacheTags,
+  ...orderCacheTags
 ];
 export type ApiTagType = (typeof tags)[number];
 

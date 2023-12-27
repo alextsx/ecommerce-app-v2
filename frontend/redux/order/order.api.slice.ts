@@ -1,5 +1,10 @@
 import { apiSlice } from '../api/api.slice';
-import { CreateOrderRequestType, CreateOrderResponseType } from './order.types';
+import { OrderCacheTagsEnum } from './order.tags';
+import {
+  CreateOrderRequestType,
+  CreateOrderResponseType,
+  OrderHistoryResponseType
+} from './order.types';
 
 const orderApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,7 +13,8 @@ const orderApiSlice = apiSlice.injectEndpoints({
         url: '/order',
         method: 'POST',
         body
-      })
+      }),
+      invalidatesTags: [OrderCacheTagsEnum.ORDER_HISTORY]
     }),
     createGuestOrder: builder.mutation<CreateOrderResponseType, CreateOrderRequestType>({
       query: (body) => ({
@@ -16,8 +22,19 @@ const orderApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body
       })
+    }),
+    getOrderHistory: builder.query<OrderHistoryResponseType, void>({
+      query: () => ({
+        url: '/order/history',
+        method: 'GET'
+      }),
+      providesTags: [OrderCacheTagsEnum.ORDER_HISTORY]
     })
   })
 });
 
-export const { useCreateLoggedInOrderMutation, useCreateGuestOrderMutation } = orderApiSlice;
+export const {
+  useCreateLoggedInOrderMutation,
+  useCreateGuestOrderMutation,
+  useGetOrderHistoryQuery
+} = orderApiSlice;

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
 import { GetUserInfoFromAtPayload, Public } from 'src/common/decorators';
 import { ValidatedBody } from 'src/common/decorators/validated-body.decorator';
 import { StripeSignature } from 'src/stripe/decorators/stripe-signature.decorator';
@@ -46,5 +46,10 @@ export class OrderController {
       stripeSignature,
       rawBody
     });
+  }
+
+  @Get('history')
+  public async getOrderHistory(@GetUserInfoFromAtPayload('sub') userId: string) {
+    return this.orderService.getOrderHistory({ userId });
   }
 }

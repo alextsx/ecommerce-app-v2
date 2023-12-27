@@ -15,3 +15,26 @@ export type CreateOrderResponseType =
   | {
       redirect_url: string;
     };
+
+export type OrderItemType = {
+  quantity: number;
+  unitPrice: string;
+  total: string;
+  product: {
+    name: string;
+    productImages: {
+      url: string;
+    }[];
+  };
+};
+
+export type DetailedOrderType = {
+  createdAt: string;
+  fulfillmentStatus: string;
+  paymentStatus: string;
+  total: string;
+  paymentMethod: string;
+  orderItems: OrderItemType[];
+};
+
+export type OrderHistoryResponseType = DetailedOrderType[];

@@ -201,4 +201,41 @@ export class OrderService {
       }
     });
   }
+
+  public async getOrderHistory({ userId }: { userId: string }) {
+    return this.prismaService.order.findMany({
+      where: {
+        customer: {
+          userId
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      select: {
+        createdAt: true,
+        fulfillmentStatus: true,
+        paymentStatus: true,
+        total: true,
+        paymentMethod: true,
+        orderItems: {
+          select: {
+            quantity: true,
+            unitPrice: true,
+            total: true,
+            product: {
+              select: {
+                name: true,
+                productImages: {
+                  select: {
+                    url: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 }
