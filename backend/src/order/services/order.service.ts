@@ -197,7 +197,7 @@ export class OrderService {
         throw new ProductNotFoundError(cartItem.slug);
       }
       if (product.inventory < cartItem.quantity) {
-        throw new InsufficientQuantityError(cartItem.slug);
+        throw new InsufficientQuantityError(product.name);
       }
     });
   }
