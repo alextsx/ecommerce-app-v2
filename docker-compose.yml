@@ -50,7 +50,7 @@ services:
     ports:
       - 4551:4551
     environment:
-      - PARAMS=http -region=eu -authtoken=${NGROK_AUTH_TOKEN} localhost:3000
+      - PARAMS=http -region=eu -authtoken=${NGROK_AUTH_TOKEN} backend:3000
     networks:
       - app_network
 
