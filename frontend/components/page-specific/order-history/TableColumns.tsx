@@ -6,36 +6,40 @@ import { OrderItemsSheet } from './sheet/DetailsSheet';
 export const OrderHistoryTableColumns: ColumnDef<DetailedOrderType>[] = [
   {
     accessorKey: 'createdAt',
-    header: () => <div className="uppercase font-mono">Order placement date</div>,
+    header: () => <div className="uppercase font-mono text-center">Order placement date</div>,
     cell: ({ row }) => (
-      <div className="p-3">{format(new Date(row.original.createdAt), 'MM/dd/yyyy')}</div>
+      <div className="p-3 text-center">
+        {format(new Date(row.original.createdAt), 'MM/dd/yyyy HH:mm')}
+      </div>
     )
   },
   {
     accessorKey: 'fulfillmentStatus',
-    header: () => <div className="uppercase font-mono">Fulfillment Status</div>,
-    cell: ({ row }) => <div className="p-3">{row.original.fulfillmentStatus}</div>
+    header: () => <div className="uppercase font-mono text-center">Fulfillment Status</div>,
+    cell: ({ row }) => <div className="p-3 text-center">{row.original.fulfillmentStatus}</div>
   },
   {
     accessorKey: 'paymentStatus',
-    header: () => <div className="uppercase font-mono">Payment Status</div>,
-    cell: ({ row }) => <div className="p-3">{row.original.paymentStatus}</div>
+    header: () => <div className="uppercase font-mono text-center">Payment Status</div>,
+    cell: ({ row }) => <div className="p-3 text-center">{row.original.paymentStatus}</div>
   },
   {
     accessorKey: 'total',
-    header: () => <div className="uppercase font-mono">Total price</div>,
-    cell: ({ row }) => <div className="p-3">${parseFloat(row.original.total).toFixed(2)}</div>
+    header: () => <div className="uppercase font-mono text-center">Total price</div>,
+    cell: ({ row }) => (
+      <div className="p-3 text-center">${parseFloat(row.original.total).toFixed(2)}</div>
+    )
   },
   {
     accessorKey: 'paymentMethod',
-    header: () => <div className="uppercase font-mono">Payment Method</div>,
-    cell: ({ row }) => <div className="p-3">{row.original.paymentMethod}</div>
+    header: () => <div className="uppercase font-mono text-center">Payment Method</div>,
+    cell: ({ row }) => <div className="p-3 text-center">{row.original.paymentMethod}</div>
   },
   {
     accessorKey: 'orderItems',
-    header: () => <div className="uppercase font-mono">Details</div>,
+    header: () => <div className="uppercase font-mono text-center">Details</div>,
     cell: ({ row }) => (
-      <div className="p-3">
+      <div className="p-3 text-center">
         <OrderItemsSheet orderItems={row.original.orderItems} />
       </div>
     )

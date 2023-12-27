@@ -38,8 +38,8 @@ export const OrderItemsSheetContent = ({ orderItems }: OrderItemsSheetContentPro
               ))}
             </div>
             <div className="h-full flex flex-col justify-between">
-              <div>Unit Price: {item.unitPrice}</div>
-              <div>Total: {item.total}</div>
+              <div>Unit Price: ${parseFloat(item.unitPrice).toFixed(2)}</div>
+              <div>Total: ${parseFloat(item.total).toFixed(2)}</div>
             </div>
           </CardContent>
           <CardFooter className="p-0"></CardFooter>
