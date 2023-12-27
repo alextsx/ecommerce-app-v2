@@ -21,8 +21,7 @@ export class LineItemsService {
       const cartItem = cartItems.find((item) => item.slug === product.slug);
 
       const productPrice = product.discountedPrice ?? product.price;
-      const productPriceInteger = Math.ceil(productPrice);
-
+      const productPrice_TwoDecimals = Number(productPrice.toFixed(2));
       return {
         price_data: {
           currency: 'eur',
@@ -31,7 +30,7 @@ export class LineItemsService {
             ...(product.description && { description: product.description }),
             images: product.productImages.map((image) => image.url)
           },
-          unit_amount: productPriceInteger * 100
+          unit_amount: productPrice_TwoDecimals * 100
         },
         quantity: cartItem.quantity
       };
