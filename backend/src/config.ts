@@ -8,6 +8,7 @@ export interface Config {
   rtCookieName: string;
   corsOrigin?: string;
   STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
   success_url: string;
   cancel_url: string;
   currency: string;
@@ -27,6 +28,7 @@ export const config: () => Config = () => ({
   rtCookieName: process.env.RT_COOKIE_NAME || 'refresh_token',
   corsOrigin: process.env.FRONTEND_URL,
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   success_url: process.env.SUCCESS_URL,
   cancel_url: process.env.CANCEL_URL,
   currency: process.env.CURRENCY
