@@ -149,8 +149,7 @@ export class OrderService {
     });
 
     return {
-      checkoutSessionId: checkoutSession.id,
-      url: checkoutSession.url
+      checkoutSessionId: checkoutSession.id
     };
   }
 
