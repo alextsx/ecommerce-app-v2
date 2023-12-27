@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { AtGuard } from './common/guards';
+import { JsonBodyMiddleware } from './common/middlewares/json-body.middleware';
+import { RawBodyMiddleware } from './common/middlewares/raw-body.middleware';
 import { config } from './config';
 import { CustomerModule } from './customer/customer.module';
 import { OrderModule } from './order/order.module';
@@ -39,4 +41,15 @@ import { UserModule } from './user/user.module';
     }
   ]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(RawBodyMiddleware)
+      .forRoutes({
+        path: '/order/stripe-webhook',
+        method: RequestMethod.POST
+      })
+      .apply(JsonBodyMiddleware)
+      .forRoutes('*');
+  }
+}

@@ -7,7 +7,7 @@ import { InvalidRefreshTokenExceptionFilter } from './common/filters/invalid-ref
 import { Config } from './config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
   const configService = app.get<ConfigService<Config>>(ConfigService);
   const port = configService.get('port');
 
