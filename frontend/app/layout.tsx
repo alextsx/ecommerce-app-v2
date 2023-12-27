@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <ReduxProvider>
           <Header />
-          <main className="flex flex-1 bg-secondary justify-center items-center flex-col w-full py-10">
+          <main className="flex flex-1 bg-secondary justify-center items-center flex-col w-full h-full">
             {children}
           </main>
         </ReduxProvider>

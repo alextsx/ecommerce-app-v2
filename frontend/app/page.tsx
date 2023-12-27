@@ -14,7 +14,7 @@ import {
 export default function Homepage() {
   return (
     <>
-      <div className="flex flex-col items-center md:px-20 lg:flex-row w-full">
+      <div className="flex flex-col items-center md:px-20 lg:flex-row w-full py-10">
         <HeroSection />
         <Slider />
       </div>

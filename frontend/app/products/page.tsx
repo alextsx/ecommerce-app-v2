@@ -4,7 +4,7 @@ import { ProductsSortBySelector } from '@/components/page-specific/products/Sort
 
 const ProductsListingPage = () => {
   return (
-    <section className="w-full relative px-28">
+    <section className="w-full relative px-28 py-10">
       <div className="flex flex-row justify-between">
         <h1 className="ml-2 text-2xl font-bold">
           <span className="font-thin">Home</span> / Search
