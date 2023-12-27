@@ -116,7 +116,7 @@ export class OrderService {
 
     switch (checkoutDetails.paymentMethod) {
       case 'stripe':
-        return this.handleStripePayment({ products, cartItems });
+        return this.handleStripePayment({ orderId: order.id, products, cartItems });
       case 'cod':
         return this.handleCodPayment();
       default:
@@ -132,17 +132,20 @@ export class OrderService {
 
   private async handleStripePayment({
     products,
-    cartItems
+    cartItems,
+    orderId
   }: {
     products: ProductWithImage[];
     cartItems: CartItemDto[];
+    orderId: string;
   }) {
     //Create line items
     const lineItems = this.lineItemsService.createLineItems(products, cartItems);
 
     //Create checkout session
     const checkoutSession = await this.checkoutSessionService.createCheckoutSession({
-      line_items: lineItems
+      line_items: lineItems,
+      orderId: orderId
     });
 
     return {

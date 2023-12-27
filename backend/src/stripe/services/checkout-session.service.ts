@@ -11,7 +11,13 @@ export class CheckoutSessionService {
     private readonly configService: ConfigService<Config>
   ) {}
 
-  public createCheckoutSession({ line_items }: { line_items: LineItemType[] }) {
+  public createCheckoutSession({
+    line_items,
+    orderId
+  }: {
+    line_items: LineItemType[];
+    orderId: string;
+  }) {
     const success_url = this.configService.get<string>('success_url');
     const cancel_url = this.configService.get<string>('cancel_url');
     const currency = this.configService.get<string>('currency');
@@ -21,6 +27,9 @@ export class CheckoutSessionService {
       cancel_url,
       payment_method_types: ['card'],
       mode: 'payment',
+      metadata: {
+        order_id: orderId
+      },
       currency
     });
   }

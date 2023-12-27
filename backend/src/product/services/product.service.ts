@@ -108,4 +108,17 @@ export class ProductService {
       }
     });
   }
+
+  public async increaseInventory({ productId, quantity }: { productId: string; quantity: number }) {
+    return this.prismaService.product.update({
+      where: {
+        id: productId
+      },
+      data: {
+        inventory: {
+          increment: quantity
+        }
+      }
+    });
+  }
 }
