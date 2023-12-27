@@ -16,6 +16,11 @@ const labelGroupsUser = [
       label: 'Profile',
       shortcut: '⇧⌘P',
       href: '/profile'
+    },
+    {
+      label: 'Order history',
+      shortcut: '⇧⌘O',
+      href: '/order-history'
     }
   ],
   [
