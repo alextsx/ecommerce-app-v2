@@ -10,7 +10,7 @@ import { ProductService } from 'src/product/services/product.service';
 import { ProductsService } from 'src/product/services/products.service';
 import { CheckoutSessionService } from 'src/stripe/services/checkout-session.service';
 import { LineItemsService, ProductWithImage } from 'src/stripe/services/line-items.service';
-import { CartItemDto, CheckoutDetailsDto, CreateOrderDto } from '../dtos/create-order.dto';
+import { CartItemDto, CreateOrderDto } from '../dtos/create-order.dto';
 import { InsufficientQuantityError } from '../errors/insufficient-quantity.error';
 import { InvalidCartItemsError } from '../errors/invalid-cartitems.error';
 import { ProductNotFoundError } from '../errors/product-notfound.error';
@@ -39,7 +39,7 @@ export class OrderService {
   }) {
     const { checkoutDetails, cartItems } = createOrderDto;
 
-    const shippingAddressData: CreateAddressDto = this.extractAddressDetails({
+    const shippingAddressData: CreateAddressDto = this.addressService.extractAddressDetails({
       checkoutDetails,
       prefix: 'shipping'
     });
@@ -51,7 +51,7 @@ export class OrderService {
     let billingAddress = shippingAddress;
 
     if (!checkoutDetails['billing-same-as-shipping']) {
-      const billingAddressData: CreateAddressDto = this.extractAddressDetails({
+      const billingAddressData: CreateAddressDto = this.addressService.extractAddressDetails({
         checkoutDetails,
         prefix: 'billing'
       });
@@ -173,23 +173,6 @@ export class OrderService {
         total
       }
     });
-  }
-
-  private extractAddressDetails({
-    checkoutDetails,
-    prefix
-  }: {
-    checkoutDetails: CheckoutDetailsDto;
-    prefix: string;
-  }): CreateAddressDto {
-    return {
-      city: checkoutDetails[`${prefix}-city`],
-      country: checkoutDetails[`${prefix}-country`],
-      line1: checkoutDetails[`${prefix}-line1`],
-      line2: checkoutDetails[`${prefix}-line2`],
-      state: checkoutDetails[`${prefix}-state`],
-      zipcode: checkoutDetails[`${prefix}-zipcode`]
-    };
   }
 
   private validateCartItems({

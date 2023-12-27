@@ -17,4 +17,5 @@ export class UserDetailsDto implements UserDetails {
   createdAt: Date;
   @Exclude()
   updatedAt: Date;
+  'billing-same-as-shipping': boolean;
 }

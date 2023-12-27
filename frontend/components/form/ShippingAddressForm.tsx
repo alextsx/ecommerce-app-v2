@@ -3,8 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CheckoutFormType } from '@/app/(checkout-stage)/checkout/page';
+import { UpdateProfileFormType } from '@/app/profile/page';
 
-export const ShippingAddressForm = ({ formik }: { formik: FormikProps<CheckoutFormType> }) => {
+export const ShippingAddressForm = ({
+  formik
+}: {
+  formik: FormikProps<CheckoutFormType> | FormikProps<UpdateProfileFormType>;
+}) => {
   const { touched, errors } = formik;
 
   return (

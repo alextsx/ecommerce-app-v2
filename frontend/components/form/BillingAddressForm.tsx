@@ -4,9 +4,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/shadcn-utils';
 import { CheckoutFormType } from '@/app/(checkout-stage)/checkout/page';
+import { UpdateProfileFormType } from '@/app/profile/page';
 import { Checkbox } from '../ui/checkbox';
 
-export const BillingAddressForm = ({ formik }: { formik: FormikProps<CheckoutFormType> }) => {
+export const BillingAddressForm = ({
+  formik
+}: {
+  formik: FormikProps<CheckoutFormType> | FormikProps<UpdateProfileFormType>;
+}) => {
   const { touched, errors, values, setFieldValue } = formik;
   const disabled = values['billing-same-as-shipping'];
 

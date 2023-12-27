@@ -5,7 +5,10 @@ import { SetUserDetailsPayload, UserDetailsState } from './user-details.types';
 const initialState: UserDetailsState = {
   firstName: '',
   lastName: '',
-  phone: ''
+  phone: '',
+  shippingAddress: null,
+  billingAddress: null,
+  'billing-same-as-shipping': false
 };
 
 const reducers = {
@@ -13,6 +16,9 @@ const reducers = {
     state.firstName = action.payload.firstName;
     state.lastName = action.payload.lastName;
     state.phone = action.payload.phone;
+    state.shippingAddress = action.payload.shippingAddress;
+    state.billingAddress = action.payload.billingAddress;
+    state['billing-same-as-shipping'] = action.payload['billing-same-as-shipping'];
   }
 };
 
@@ -31,6 +37,8 @@ export const selectNameInitials = (state: RootState) => {
   const { firstName, lastName } = state.userDetails;
   return `${firstName?.[0]}${lastName?.[0]}`;
 };
+
+export const selectUserDetails = (state: RootState) => state.userDetails;
 
 //actions
 export const { setUserDetails } = userDetailsSlice.actions;
