@@ -93,11 +93,12 @@ export class UserDetailsService {
 
     //for simplicity, we delete the old addresses and create new ones ( i dont have time for it :))
     //TODO - update addresses instead of deleting and creating new ones
-    if (billingAddressId !== null) {
-      await this.deleteAddress({ addressId: billingAddressId });
-    }
     if (shippingAddressId !== null) {
-      await this.deleteAddress({ addressId: shippingAddressId });
+      await this.addressService.deleteAddress({ addressId: shippingAddressId });
+    }
+
+    if (billingAddressId !== null && billingAddressId !== shippingAddressId) {
+      await this.addressService.deleteAddress({ addressId: billingAddressId });
     }
 
     if (billingSameAsShipping) {
@@ -123,14 +124,6 @@ export class UserDetailsService {
         ...(phone && { phone }),
         billingAddressId,
         shippingAddressId
-      }
-    });
-  }
-
-  private deleteAddress({ addressId }: { addressId: string }) {
-    return this.prismaService.address.delete({
-      where: {
-        id: addressId
       }
     });
   }
