@@ -15,13 +15,14 @@ import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import getStripe from '@/lib/get-stripejs';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
-import { selectAccessToken } from '@/redux/auth/auth.slice';
+import { selectAccessToken, selectEmail } from '@/redux/auth/auth.slice';
 import { selectCart, selectCartTotal } from '@/redux/cart/cart.slice';
 import {
   useCreateGuestOrderMutation,
   useCreateLoggedInOrderMutation
 } from '@/redux/order/order.api.slice';
 import { CreateOrderResponseType } from '@/redux/order/order.types';
+import { selectUserDetails } from '@/redux/user-details/user-details.slice';
 import { checkoutSchema } from '@/schemas/checkout.schema';
 
 export type CheckoutFormType = {
@@ -45,27 +46,6 @@ export type CheckoutFormType = {
   paymentMethod: 'stripe' | 'cod';
 };
 
-const initialValues: CheckoutFormType = {
-  'billing-same-as-shipping': false,
-  'billing-line1': '',
-  'billing-line2': '',
-  'billing-city': '',
-  'billing-state': '',
-  'billing-country': '',
-  'billing-zipcode': '',
-  'shipping-line1': '',
-  'shipping-line2': '',
-  'shipping-city': '',
-  'shipping-state': '',
-  'shipping-country': '',
-  'shipping-zipcode': '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  paymentMethod: 'cod'
-};
-
 const CheckoutPage = () => {
   const router = useRouter();
 
@@ -86,6 +66,55 @@ const CheckoutPage = () => {
   //mutations
   const [placeOrderGuest, { isLoading: isGuestLoading }] = useCreateGuestOrderMutation();
   const [placeOrderUser, { isLoading: isUserLoading }] = useCreateLoggedInOrderMutation();
+
+  // if logged in we use userdetails for initial values
+  let initialValues: CheckoutFormType;
+  const userDetails = useSelector(selectUserDetails);
+  const email = useSelector(selectEmail);
+
+  if (isLoggedIn) {
+    initialValues = {
+      'billing-same-as-shipping': userDetails?.['billing-same-as-shipping'] || false,
+      'billing-line1': userDetails?.billingAddress?.line1 || '',
+      'billing-line2': userDetails?.billingAddress?.line2 || '',
+      'billing-city': userDetails?.billingAddress?.city || '',
+      'billing-state': userDetails?.billingAddress?.state || '',
+      'billing-country': userDetails?.billingAddress?.country || '',
+      'billing-zipcode': userDetails?.billingAddress?.zipcode || '',
+      'shipping-line1': userDetails?.shippingAddress?.line1 || '',
+      'shipping-line2': userDetails?.shippingAddress?.line2 || '',
+      'shipping-city': userDetails?.shippingAddress?.city || '',
+      'shipping-state': userDetails?.shippingAddress?.state || '',
+      'shipping-country': userDetails?.shippingAddress?.country || '',
+      'shipping-zipcode': userDetails?.shippingAddress?.zipcode || '',
+      firstName: userDetails?.firstName || '',
+      lastName: userDetails?.lastName || '',
+      email: email ?? '',
+      phone: userDetails?.phone || '',
+      paymentMethod: 'cod'
+    };
+  } else {
+    initialValues = {
+      'billing-same-as-shipping': false,
+      'billing-line1': '',
+      'billing-line2': '',
+      'billing-city': '',
+      'billing-state': '',
+      'billing-country': '',
+      'billing-zipcode': '',
+      'shipping-line1': '',
+      'shipping-line2': '',
+      'shipping-city': '',
+      'shipping-state': '',
+      'shipping-country': '',
+      'shipping-zipcode': '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      paymentMethod: 'cod'
+    };
+  }
 
   const onSubmit = async (values: any) => {
     hide();
