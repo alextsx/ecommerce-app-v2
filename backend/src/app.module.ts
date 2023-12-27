@@ -4,6 +4,7 @@ import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { AtGuard } from './common/guards';
+import { RoleGuard } from './common/guards/role.guard';
 import { JsonBodyMiddleware } from './common/middlewares/json-body.middleware';
 import { RawBodyMiddleware } from './common/middlewares/raw-body.middleware';
 import { config } from './config';
@@ -38,6 +39,10 @@ import { UserModule } from './user/user.module';
     {
       provide: 'APP_GUARD',
       useClass: AtGuard
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: RoleGuard
     }
   ]
 })
