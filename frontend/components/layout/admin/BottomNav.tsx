@@ -17,7 +17,7 @@ export const BottomNav = () => {
           Manage Products
         </Button>
       </Link>
-      <Link href="/admin/orders">
+      <Link href="/admin/order-history">
         <Button className="text-lg" variant="default">
           <FaShoppingCart className="mr-2" />
           Manage Orders

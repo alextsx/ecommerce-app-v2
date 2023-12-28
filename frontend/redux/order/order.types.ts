@@ -1,4 +1,5 @@
 import { CheckoutFormType } from '@/app/(checkout-stage)/checkout/page';
+import { AddressType } from '../user-details/user-details.types';
 
 export type CreateOrderRequestType = {
   checkoutDetails: CheckoutFormType;
@@ -35,6 +36,17 @@ export type DetailedOrderType = {
   total: string;
   paymentMethod: string;
   orderItems: OrderItemType[];
+};
+
+export type DetailedAdminOrderType = DetailedOrderType & {
+  customer: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    billingAddress: AddressType;
+    shippingAddress: AddressType;
+  };
 };
 
 export type OrderHistoryResponseType = DetailedOrderType[];

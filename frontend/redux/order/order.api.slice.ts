@@ -3,6 +3,8 @@ import { OrderCacheTagsEnum } from './order.tags';
 import {
   CreateOrderRequestType,
   CreateOrderResponseType,
+  DetailedAdminOrderType,
+  DetailedOrderType,
   OrderHistoryResponseType
 } from './order.types';
 
@@ -29,6 +31,17 @@ const orderApiSlice = apiSlice.injectEndpoints({
         method: 'GET'
       }),
       providesTags: [OrderCacheTagsEnum.ORDER_HISTORY]
+    }),
+    getAdminOrderHistory: builder.query<
+      PaginationResponse<DetailedAdminOrderType>,
+      Record<string, string>
+    >({
+      query: (params) => ({
+        url: '/order/admin-history',
+        method: 'GET',
+        params
+      }),
+      providesTags: [OrderCacheTagsEnum.ADMIN_ORDER_HISTORY]
     })
   })
 });
@@ -36,5 +49,6 @@ const orderApiSlice = apiSlice.injectEndpoints({
 export const {
   useCreateLoggedInOrderMutation,
   useCreateGuestOrderMutation,
-  useGetOrderHistoryQuery
+  useGetOrderHistoryQuery,
+  useGetAdminOrderHistoryQuery
 } = orderApiSlice;

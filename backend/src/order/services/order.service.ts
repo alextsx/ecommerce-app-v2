@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Product } from '@prisma/client';
 import { AddressService } from 'src/address/address.service';
 import { CreateAddressDto } from 'src/address/dtos/create-address.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Config } from 'src/config';
 import { CustomerService } from 'src/customer/customer.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -237,5 +238,86 @@ export class OrderService {
         }
       }
     });
+  }
+
+  public async getFullOrderHistoryForAdmin({ paginationDto }: { paginationDto: PaginationDto }) {
+    const { page = 1, limit = 10 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const total = await this.prismaService.order.count();
+    const last_page = Math.ceil(total / limit);
+
+    const orders = await this.prismaService.order.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      skip,
+      take: limit,
+      select: {
+        createdAt: true,
+        fulfillmentStatus: true,
+        paymentStatus: true,
+        total: true,
+        paymentMethod: true,
+        customer: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+            billingAddress: {
+              select: {
+                line1: true,
+                line2: true,
+                city: true,
+                country: true,
+                state: true,
+                zipcode: true
+              }
+            },
+            shippingAddress: {
+              select: {
+                line1: true,
+                line2: true,
+                city: true,
+                country: true,
+                state: true,
+                zipcode: true
+              }
+            }
+          }
+        },
+        orderItems: {
+          select: {
+            quantity: true,
+            unitPrice: true,
+            total: true,
+            product: {
+              select: {
+                name: true,
+                productImages: {
+                  select: {
+                    url: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const meta = {
+      items_per_page: limit,
+      currentPage: page,
+      total,
+      last_page,
+      first_page: 1
+    };
+
+    return {
+      data: orders,
+      meta
+    };
   }
 }

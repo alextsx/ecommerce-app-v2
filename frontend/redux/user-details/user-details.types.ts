@@ -10,7 +10,7 @@ import { UpdateProfileFormType } from '@/app/profile/page';
         "zipcode": "12345",
         "country": "Billing Country"
 */
-type AddressType = {
+export type AddressType = {
   line1: string;
   line2: string;
   state: string;
