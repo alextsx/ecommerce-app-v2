@@ -1,31 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
 import { FormikProvider, useFormik } from 'formik';
 import { BillingAddressForm } from '@/components/form/BillingAddressForm';
-import { CustomerDetailsForm } from '@/components/form/CustomerDetailsForm';
-import { PaymentMethodForm } from '@/components/form/PaymentMethodForm';
 import { ShippingAddressForm } from '@/components/form/ShippingAddressForm';
 import { UpdateUserDetailsForm } from '@/components/form/UpdateUserDetailsForm';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { useAlertBox } from '@/hooks/useAlertBox';
 import { useToggleToast } from '@/hooks/useToggleToast';
-import getStripe from '@/lib/get-stripejs';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
+import withAuthenticationProtection from '@/hocs/withAuthenticationProtection';
 import { selectAccessToken } from '@/redux/auth/auth.slice';
-import { selectCart, selectCartTotal } from '@/redux/cart/cart.slice';
-import {
-  useCreateGuestOrderMutation,
-  useCreateLoggedInOrderMutation
-} from '@/redux/order/order.api.slice';
-import { CreateOrderResponseType } from '@/redux/order/order.types';
 import { useUpdateUserDetailsMutation } from '@/redux/user-details/user-details.api.slice';
 import { selectUserDetails } from '@/redux/user-details/user-details.slice';
-import { checkoutSchema } from '@/schemas/checkout.schema';
 import { updateProfileSchema } from '@/schemas/update-profile.schema';
 
 export type UpdateProfileFormType = {
@@ -146,4 +133,4 @@ const ProfilePage = () => {
     </>
   );
 };
-export default ProfilePage;
+export default withAuthenticationProtection(ProfilePage);

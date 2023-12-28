@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { AuthState, SetAuthDetailsPayload } from './auth.types';
+import { AuthState, ROLES, SetAuthDetailsPayload } from './auth.types';
 
 const initialState: AuthState = {
   email: null,
@@ -32,6 +32,7 @@ const authSlice = createSlice({
 //selectors
 export const selectEmail = (state: RootState): string | null => state.auth.email;
 export const selectAccessToken = (state: RootState): string | null => state.auth.access_token;
+export const selectRole = (state: RootState): string | null => state.auth.role;
 
 //actions
 export const { setAuthDetails, deleteCredentials, setAccessToken } = authSlice.actions;

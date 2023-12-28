@@ -46,7 +46,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
       const response = await login({ email, password, remember }).unwrap();
       const { access_token } = response;
       dispatch(setAccessToken(access_token));
-      dispatch(setAuthDetails({ email, role: ROLES.CUSTOMER }));
+      dispatch(setAuthDetails({ email, role: 'CUSTOMER' }));
       toggleToast({
         title: 'Success',
         description: 'You are now logged in!',

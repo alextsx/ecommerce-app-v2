@@ -6,7 +6,7 @@ export enum ROLES {
 //API
 export type WhoResponse = {
   email: string;
-  role: ROLES;
+  role: 'ADMIN' | 'CUSTOMER';
 };
 
 export type LoginResponse = {
@@ -20,10 +20,10 @@ export type RefreshResponse = {
 export type AuthState = {
   email: string | null;
   access_token: string | null;
-  role: ROLES | null;
+  role: string | null;
 };
 
 export type SetAuthDetailsPayload = {
   email: string;
-  role: ROLES;
+  role: string;
 };

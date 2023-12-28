@@ -1,5 +1,7 @@
-import React from 'react';
+'use client';
+
 import OrderHistoryTable from '@/components/page-specific/order-history/Table';
+import withAuthenticationProtection from '@/hocs/withAuthenticationProtection';
 
 const OrderHistoryPage = () => {
   return (
@@ -14,4 +16,4 @@ const OrderHistoryPage = () => {
   );
 };
 
-export default OrderHistoryPage;
+export default withAuthenticationProtection(OrderHistoryPage);
