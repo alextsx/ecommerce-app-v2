@@ -180,9 +180,12 @@ export class ProductService {
     //check if any orderitems have that product
     const orderItems = await this.prismaService.orderItem.findMany({
       where: {
-        productId: slug
+        product: {
+          slug
+        }
       }
     });
+
     if (orderItems.length > 0) {
       throw new ProductInUseError(slug);
     }

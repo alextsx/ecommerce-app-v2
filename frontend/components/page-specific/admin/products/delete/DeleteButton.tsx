@@ -19,7 +19,6 @@ export const ProductDeleteButton = ({ slug }: { slug: string }) => {
         description: `Product with slug ${slug} has been deleted.`,
         variant: 'constructive'
       });
-
       return;
     } catch (err) {
       const message = parseErrorResponse(err);
