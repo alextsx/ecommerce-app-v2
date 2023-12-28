@@ -1,23 +1,24 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
-  UseGuards,
+  UseFilters,
   UseInterceptors
 } from '@nestjs/common';
 import { Category } from '@prisma/client';
 import { Public } from 'src/common/decorators';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { ValidatedBody } from 'src/common/decorators/validated-body.decorator';
-import { RoleGuard } from 'src/common/guards/role.guard';
 import { TransformDataInterceptor } from 'src/common/interceptors/transformData.interceptor';
 import { CategoryService } from './category.service';
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from './dtos/category.dto';
+import { CategoryExceptionFilter } from './filters/category-exception.filter';
 
 @Controller()
+@UseFilters(CategoryExceptionFilter)
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
@@ -30,18 +31,31 @@ export class CategoryController {
 
   @Post('category')
   @Roles('ADMIN')
-  @UseGuards(RoleGuard)
-  public async createCategory(@ValidatedBody() categoryDto: CreateCategoryDto) {
-    return this.categoryService.createCategory(categoryDto);
+  public async createCategory(@ValidatedBody() createCategoryDto: CreateCategoryDto) {
+    return this.categoryService.createCategory(createCategoryDto);
   }
 
-  @Delete('category')
-  public async deleteCategory(@Body('slug') slug: string) {
+  @Delete('category/:slug')
+  @Roles('ADMIN')
+  public async deleteCategory(@Param('slug') slug: string) {
     return this.categoryService.deleteCategory(slug);
   }
 
-  @Put('category')
-  public async updateCategory(@Body() categoryDto: UpdateCategoryDto) {
-    return this.categoryService.updateCategory(categoryDto);
+  @Get('category/:slug')
+  @Roles('ADMIN')
+  public async getCategoryBySlug(@Param('slug') slug: string) {
+    return this.categoryService.getCategoryBySlug(slug);
+  }
+
+  @Put('category/:slug')
+  @Roles('ADMIN')
+  public async updateCategory(
+    @Param('slug') slug: string,
+    @ValidatedBody() categoryDto: UpdateCategoryDto
+  ) {
+    return this.categoryService.updateCategory({
+      oldSlug: slug,
+      data: categoryDto
+    });
   }
 }

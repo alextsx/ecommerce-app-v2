@@ -74,5 +74,14 @@ export const errorLabels = {
       required: 'Payment method is required',
       oneOf: 'Payment method must be one of the following values: stripe, cod'
     }
+  },
+  admin: {
+    category: {
+      name: {
+        required: 'Name is required',
+        max: 'Name must be less than 255 characters',
+        min: 'Name must be at least 3 characters'
+      }
+    }
   }
 };

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateCategoryDto } from './dtos/category.dto';
+import { CategoryConflictError } from './conflict/conflict.error';
+import { CategoryInUseError } from './conflict/in-use.error.ts';
+import { CreateCategoryDto, UpdateCategoryDto } from './dtos/category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -16,14 +18,27 @@ export class CategoryService {
   public getCategoryBySlug(slug: string) {
     return this.prismaService.category.findUnique({
       where: {
-        slug
+        slug: slug.toLocaleLowerCase()
       }
     });
   }
 
-  public createCategory(data: any) {
+  public async createCategory(data: CreateCategoryDto) {
+    const categories = await this.prismaService.category.findMany({
+      where: {
+        name: data.name
+      }
+    });
+
+    if (categories.length > 0) {
+      throw new CategoryConflictError(data.name);
+    }
+
     return this.prismaService.category.create({
-      data
+      data: {
+        name: data.name,
+        slug: data.name.toLowerCase()
+      }
     });
   }
 
@@ -32,34 +47,35 @@ export class CategoryService {
     const products = await this.prismaService.product.findFirst({
       where: {
         category: {
-          slug
+          slug: slug.toLocaleLowerCase()
         }
       }
     });
 
     if (products) {
-      throw new Error('Cannot delete category with products');
+      throw new CategoryInUseError(slug);
     }
 
     return this.prismaService.category.delete({
       where: {
-        slug
+        slug: slug.toLocaleLowerCase()
       }
     });
   }
 
-  public async updateCategory(data: UpdateCategoryDto) {
-    const oldSlug = data.oldSlug;
-
+  public async updateCategory({ data, oldSlug }: { oldSlug: string; data: UpdateCategoryDto }) {
     //categories with new namne
     const categories = await this.prismaService.category.findMany({
       where: {
-        name: data.new_name
+        name: {
+          equals: data.name,
+          mode: 'insensitive'
+        }
       }
     });
 
     if (categories.length > 0) {
-      throw new Error('Category with this name already exists');
+      throw new CategoryConflictError(data.name);
     }
 
     return this.prismaService.category.update({
@@ -67,8 +83,8 @@ export class CategoryService {
         slug: oldSlug
       },
       data: {
-        name: data.new_name,
-        slug: data.new_name.toLowerCase()
+        name: data.name,
+        slug: data.name.toLowerCase()
       }
     });
   }

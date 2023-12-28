@@ -18,9 +18,9 @@ export const CategoriesListTableColumns: ColumnDef<Category>[] = [
   {
     accessorKey: 'operations',
     header: () => <div className="uppercase font-mono text-center">Operations</div>,
-    cell: () => (
+    cell: ({ row }) => (
       <div className="p-3 text-center justify-center items-center flex gap-10">
-        <Link href="/admin/categories/update">
+        <Link href={`/admin/categories/update/${row.original.slug}`}>
           <Button className="text-lg" variant="default">
             Update
           </Button>

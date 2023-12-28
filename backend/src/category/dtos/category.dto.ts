@@ -1,6 +1,6 @@
 import { Category } from '@prisma/client';
 import { Exclude, Transform } from 'class-transformer';
-import { IsString, Min } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 export class CategoryDto implements Category {
   @Exclude()
@@ -16,18 +16,12 @@ export class CategoryDto implements Category {
 
 export class CreateCategoryDto {
   @IsString()
-  @Min(3)
+  @Length(3, 255)
   name: string;
-  @IsString()
-  @Min(3)
-  slug: string;
 }
 
 export class UpdateCategoryDto {
   @IsString()
-  @Min(3)
-  oldSlug: string;
-  @IsString()
-  @Min(3)
-  new_name: string;
+  @Length(3, 255)
+  name: string;
 }
