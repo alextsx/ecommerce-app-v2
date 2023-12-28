@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Category } from '@/redux/categories/categories.types';
-import { DeleteButton } from './delete/DeleteButton';
+import { CategoryDeleteButton } from './delete/DeleteButton';
 
 export const CategoriesListTableColumns: ColumnDef<Category>[] = [
   {
@@ -25,7 +25,7 @@ export const CategoriesListTableColumns: ColumnDef<Category>[] = [
             Update
           </Button>
         </Link>
-        <DeleteButton slug={row.original.slug} />
+        <CategoryDeleteButton slug={row.original.slug} />
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import { Category, Product, ProductImage } from '@prisma/client';
 import { Exclude, Expose, Transform } from 'class-transformer';
+import { IsBoolean, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
 
 class BaseProductDto implements Partial<Product> {
   @Exclude()
@@ -25,7 +26,6 @@ class BaseProductDto implements Partial<Product> {
   discountedPriceFormatted: string;
 
   inventory: number;
-  @Exclude()
   isFeatured: boolean;
 
   @Transform(({ value }: { value: ProductImage[] }) => value.map((image) => image.url))
@@ -50,3 +50,34 @@ export class ProductDto extends BaseProductDto {
 
 //used for product cards (homepage,related products,products page)
 export class ProductCardDto extends BaseProductDto {}
+
+export class CreateOrUpdateProductDto {
+  @Length(3, 255)
+  @IsString()
+  name: string;
+  @IsString()
+  @Length(3, 255)
+  @IsOptional()
+  description: string;
+
+  @IsNumber()
+  @Transform(({ value }: { value: string }) => Number(value))
+  price: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Transform(({ value }: { value: string }) => Number(value))
+  discountedPrice: number;
+
+  @IsNumber()
+  @Transform(({ value }: { value: string }) => Number(value))
+  inventory: number;
+
+  @IsBoolean()
+  isFeatured: boolean;
+  @IsString({
+    message: 'Category must be a string'
+  })
+  category: string;
+}

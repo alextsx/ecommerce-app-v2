@@ -2,21 +2,21 @@ import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToggleToast } from '@/hooks/useToggleToast';
 import { parseErrorResponse } from '@/lib/parseErrorResponse';
-import { useDeleteCategoryMutation } from '@/redux/categories/categories.api.slice';
+import { useDeleteProductMutation } from '@/redux/product/product.api.slice';
 
-export const CategoryDeleteButton = ({ slug }: { slug: string }) => {
+export const ProductDeleteButton = ({ slug }: { slug: string }) => {
   //mutation
-  const [deleteCategory, { isLoading }] = useDeleteCategoryMutation();
+  const [deleteProduct, { isLoading }] = useDeleteProductMutation();
 
   //toast
   const toggleToast = useToggleToast();
 
   const handleDeleteButtonClick = async () => {
     try {
-      await deleteCategory(slug).unwrap();
+      await deleteProduct(slug).unwrap();
       toggleToast({
-        title: 'Category deleted.',
-        description: `Category ${slug} has been deleted.`,
+        title: 'Product deleted',
+        description: `Product with slug ${slug} has been deleted.`,
         variant: 'constructive'
       });
 

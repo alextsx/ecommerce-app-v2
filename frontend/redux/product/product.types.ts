@@ -16,4 +16,5 @@ export type Product = {
 export type DetailedProduct = Product & {
   category: string;
   rating: number;
+  isFeatured: boolean;
 };

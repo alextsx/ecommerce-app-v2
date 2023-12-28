@@ -1,6 +1,9 @@
+import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 import { InsufficientQuantityError } from 'src/order/errors/insufficient-quantity.error';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateOrUpdateProductDto } from '../dtos/product.dto';
+import { ProductInUseError } from '../errors/inuse.error';
 
 @Injectable()
 export class ProductService {
@@ -120,5 +123,78 @@ export class ProductService {
         }
       }
     });
+  }
+
+  public async createProduct(createProductDto: CreateOrUpdateProductDto) {
+    await this.prismaService.product.create({
+      data: {
+        ...createProductDto,
+        slug: this.generateProductSlug(createProductDto.name),
+        category: {
+          connect: {
+            slug: createProductDto.category
+          }
+        }
+      }
+    });
+  }
+
+  public async updateProduct({
+    slug,
+    updateProductDto
+  }: {
+    slug: string;
+    updateProductDto: CreateOrUpdateProductDto;
+  }) {
+    const newData: Omit<CreateOrUpdateProductDto, 'category'> = {
+      name: updateProductDto.name,
+      description: updateProductDto.description,
+      price: updateProductDto.price,
+      discountedPrice: updateProductDto.discountedPrice,
+      inventory: updateProductDto.inventory,
+      isFeatured: updateProductDto.isFeatured
+    };
+    const oldProduct = await this.prismaService.product.findUnique({
+      where: {
+        slug
+      },
+      select: {
+        name: true
+      }
+    });
+
+    const hasNameChanged = oldProduct.name !== updateProductDto.name;
+
+    await this.prismaService.product.update({
+      where: {
+        slug
+      },
+      data: {
+        ...newData,
+        ...(hasNameChanged && { slug: this.generateProductSlug(updateProductDto.name) })
+      }
+    });
+  }
+
+  public async deleteProduct(slug: string) {
+    //check if any orderitems have that product
+    const orderItems = await this.prismaService.orderItem.findMany({
+      where: {
+        productId: slug
+      }
+    });
+    if (orderItems.length > 0) {
+      throw new ProductInUseError(slug);
+    }
+
+    await this.prismaService.product.delete({
+      where: {
+        slug
+      }
+    });
+  }
+
+  private generateProductSlug(name: string) {
+    return faker.helpers.slugify(name) + '-' + faker.string.uuid().slice(0, 4);
   }
 }
